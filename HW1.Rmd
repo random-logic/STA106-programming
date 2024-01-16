@@ -1,0 +1,28 @@
+# 1
+a. {(A, U), (A, E), (B, U), (B, E), (C, U), (C, E), (D, U), (D, E), (F, U), (F, E)}
+<br> idk if this is right??
+
+# 2
+a. $\mu_{U_1} = 3 + 4 = 7$
+<br> $\sigma_{U_1} = 4 * 8 = 32$
+b. $\mu_{U_2} = -10 + 4 = -6$
+<br> $\sigma_{U_2} = 2 * 8 = 16$
+c. $\mu_{U_3} = 1/4 + 4 = 4.25$
+<br> $\sigma_{U_3} = 1 * 8 = 8$
+d. $\mu_{U_4} = 3/4 + 4 = 4.75$
+<br> $\sigma_{U_4} = 1/4 * 8 = 2$
+
+# 3
+$\bar{y} = 20$
+<br> $\sigma_y = 5$
+<br><br>
+
+a. $\bar{Y} = ??$
+??
+
+# 4
+a. $U_1 = \bar{Y_1} - \bar{Y_2}$
+<br> This is a normal distribution because the sum of two normal distributions, $\bar{Y_1}$ and $-\bar{Y_2}$, is also normal.
+<br>$\bar{U_1} = \mu_1 - \mu_2$
+<br>$S_{U_1} = \sqrt{\sigma_1 - \sigma_2}$
+b. ??
