@@ -1,8 +1,9 @@
-# 1
+# HW 1
+## 1
 a. {(A, U), (A, E), (B, U), (B, E), (C, U), (C, E), (D, U), (D, E), (F, U), (F, E)}
 <br> idk if this is right??
 
-# 2
+## 2
 a. $\mu_{U_1} = 3 + 4 = 7$
 <br> $\sigma_{U_1} = 4 * 8 = 32$
 b. $\mu_{U_2} = -10 + 4 = -6$
@@ -12,7 +13,7 @@ c. $\mu_{U_3} = 1/4 + 4 = 4.25$
 d. $\mu_{U_4} = 3/4 + 4 = 4.75$
 <br> $\sigma_{U_4} = 1/4 * 8 = 2$
 
-# 3
+## 3
 $\bar{y} = 20$
 <br> $\sigma_y = 5$
 <br><br>
@@ -20,9 +21,28 @@ $\bar{y} = 20$
 a. $\bar{Y} = ??$
 ??
 
-# 4
+## 4
 a. $U_1 = \bar{Y_1} - \bar{Y_2}$
 <br> This is a normal distribution because the sum of two normal distributions, $\bar{Y_1}$ and $-\bar{Y_2}$, is also normal.
 <br>$\bar{U_1} = \mu_1 - \mu_2$
 <br>$S_{U_1} = \sqrt{\sigma_1 - \sigma_2}$
 b. ??
+
+## 5
+a. The null hypothesis is that the mean of smokers differs from nonsmokers. The alternate hypothesis is that the two means are equal.
+b. $t_s = 4.4037$ (see appendix)
+
+# Appendix
+## 5b
+```{r}
+mean_1 <- 150.03
+mean_2 <- 139.18
+s_1 <- 27.49
+s_2 <- 27.49
+n_1 <- 266
+n_2 <- 234
+s_p_squared <- (s_1**2 * (n_1 - 1) + s_2**2 * (n_2 - 1)) / (n_1 + n_2 - 2)
+
+(mean_1 - mean_2) / sqrt(s_p_squared * (1 / n_1 + 1 / n_2))
+```
+
