@@ -25,10 +25,16 @@ d. $E[Y^*] = 5 - 2 * 200 = -395$
 <br> $\sigma^2[Y^*] = 2^2 * 250 = 1000$
 
 ## 4
-a. This is a normal distribution because the sum of two normal distributions, $\bar{Y_1}$ and $-\bar{Y_2}$, is also normal.
+a. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\bar{Y}_1 - \bar{Y}_2] = \mu_1 - \mu_2$
-<br>$\sigma^2[\bar{Y}_1 - \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} - \frac{\sigma_2^2}{100}}$ ??
-b. ??
+<br>$\sigma^2[\bar{Y}_1 - \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} - \frac{\sigma_2^2}{100}}$
+b. This is a normal distribution because a linear combination of normal distributions is also normal.
+<br>$E[\bar{Y}_1 + \bar{Y}_2] = \mu_1 + \mu_2$
+<br>$\sigma^2[\bar{Y}_1 + \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
+c. This is a normal distribution because a linear combination of normal distributions is also normal.
+<br>$E[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \frac{\mu_1 + \mu_2}{2} - \mu_3$
+<br>$\sigma^2[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \sqrt{\frac{\frac{\sigma_1^2}{100}+\frac{\sigma_2^2}{100}}{2} - \frac{\sigma_3^2}{100}}$
+d. ??
 
 ## 5
 a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
