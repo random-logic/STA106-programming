@@ -1,7 +1,8 @@
 # HW 1
 ## 1
+See output in appendix. Each row (not including headers) represents a possible combination. ??
+
 a. {(A, U), (A, E), (B, U), (B, E), (C, U), (C, E), (D, U), (D, E), (F, U), (F, E)}
-<br> this is right! now need to finish ??
 
 ## 2
 a. $\mu_{U_1} = 3 + 4 = 7$
@@ -17,8 +18,11 @@ d. $\mu_{U_4} = 3/4 + 4 = 4.75$
 a. $E[\bar{Y}] = 20$
 <br> $\sigma^2[\bar{Y}] = 25 / 10 = 2.5$
 b. $E[sum(Y_i)] = 20 * 10 = 200$
-<br> $\sigma^2[sum(Y_i)] = 25 * 10 = 250$ ??
-c. now need to finish ??
+<br> $\sigma^2[sum(Y_i)] = 25 * 10 = 250$
+c. $E[Y^*] = a + E[\bar{Y}] = a + 20$
+<br> $\sigma^2[Y^*] = b^2 * \sigma^2[\bar{Y}] = b^2 * 200$
+d. $E[Y^*] = 5 - 2 * 200 = -395$
+<br> $\sigma^2[Y^*] = 2^2 * 250 = 1000$
 
 ## 4
 a. This is a normal distribution because the sum of two normal distributions, $\bar{Y_1}$ and $-\bar{Y_2}$, is also normal.
@@ -34,7 +38,7 @@ c. $p < 0.0005$
 d. We reject the null hypothesis because $p < \alpha = 0.05$.
 
 ## 6
-??
+a. ??
 
 ## 7
 a. This is a mixed study because there are both observational and experimental variables.
@@ -63,6 +67,14 @@ explanatory_var_combinations <- function(...) {
   # Return the matrix of combinations
   return(combinations_matrix)
 }
+```
+
+## 1(a)
+```{r}
+grades <- c("A", "B", "C", "D", "F")
+employment <- c("E", "U")
+
+explanatory_var_combinations(grades, employment)
 ```
 
 ## 5(b)
