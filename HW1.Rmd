@@ -33,8 +33,9 @@ b. This is a normal distribution because a linear combination of normal distribu
 <br>$\sigma^2[\bar{Y}_1 + \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
 c. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \frac{\mu_1 + \mu_2}{2} - \mu_3$
-<br>$\sigma^2[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \sqrt{\frac{\frac{\sigma_1^2}{100}+\frac{\sigma_2^2}{100}}{2} - \frac{\sigma_3^2}{100}}$
-d. ??
+<br>$\sigma^2[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \sqrt{\frac{\frac{\sigma_1^2}{100}+\frac{\sigma_2^2}{100}}{4} - \frac{\sigma_3^2}{100}}$
+d. $E[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \mu_1 + \mu_3 - 2 \mu_2$
+<br>$\sigma^2[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_3^2}{100} - 4 * \frac{\sigma_2^2}{100}}$
 
 ## 5
 a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
@@ -59,7 +60,29 @@ c. The explanatory variables consists of observational and experimental variable
 d. See output in appendix. Each row (not including headers) represents a possible combination.
 
 ## I
-??
+a. Low Stress had the highest average.
+b. Yes, the standard deviations are approximately equal.
+c. Medium exercise has the lowest average age.
+d. Low exercise group differs most from its mean as it has the highest standard deviation.
+
+## II
+a. There does not seem to be a trend as the boxplots have approximately the same means, lower quartiles, and upper quartiles.
+b. Both groups vary around the same amount since the range of data is around the same.
+c. Medium exercise has the highest proportion of high stress subjects.
+d. The has marriage group has the highest proportion of low stress subjects.
+
+## III
+a. Low exercise group has the most subjects.
+b. Middle stress group has the highest age.
+c. Middle stress group has the highest average age.
+d. Females have the lowest average systolic blood pressure.
+
+## IV
+a. $t_s = 1.352333$
+b. $p = 0.1768947$
+c. $[-1.537372, 8.326066]$
+d. The confidence interval tells us the range one mean lies within the other on a normal distribution.
+e. ??
 
 # Appendix
 ```{r}
@@ -208,5 +231,18 @@ colnames(res)[colnames(res) == "sbp"] <- "sbp_mean"
 res
 ```
 
-### IV
-??
+### IV(a)
+```{r}
+res <- t.test(married, single, data = data)
+res$statistic
+```
+
+### IV(b)
+```{r}
+res$p.value
+```
+
+### IV(c)
+```{r}
+res$conf.int
+```
