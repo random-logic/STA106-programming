@@ -27,28 +27,45 @@ a. This is a normal distribution because the sum of two normal distributions, $\
 b. ??
 
 ## 5
-a. The null hypothesis is that the mean of smokers differs from nonsmokers. The alternate hypothesis is that the two means are equal.
+a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
 b. $t_s = 4.4037$ (see appendix for full calculation)
 <br> This value is the number of estimated standard deviations our sample mean difference is from the null hypothesis.
-c. ??
+c. $p < 0.0005$
+d. We reject the null hypothesis because $p < \alpha = 0.05$.
 
 ## 6
 ??
 
 ## 7
-a. This is an experimental study because researchers were modifying the instruction (standard or computer-based) to see if it affects a standardized math test scores.
+a. This is a mixed study because there are both observational and experimental variables.
 b. The primary variable of interest is test scores.
-c. The explanatory variable is the instruction.
-d. complete ??
+c. The explanatory variables consists of observational and experimental variables. The high school and section number are the observational variables. The instruction (standard or computer-based) is the experimental variable.
+d. See output in appendix. Each row (not including headers) represents a possible combination.
 
 ## 8
-??
+a. This is a mixed study because there are both observational and experimental variables.
+b. The primary variable of interest is number of days required for successful completion.
+c. The explanatory variables consists of observational and experimental variables. The prior physical fitness status (below average, average, above average) is the observational variable. The doctor they are paired with (out of three possible doctors) is the experimental variable.
+d. See output in appendix. Each row (not including headers) represents a possible combination.
 
 ## I
 ??
 
 # Appendix
-## 5b
+```{r}
+explanatory_var_combinations <- function(...) {
+  # Create a data frame with all combinations
+  combinations_df <- expand.grid(...)
+
+  # Convert the data frame to a matrix
+  combinations_matrix <- as.matrix(combinations_df)
+
+  # Return the matrix of combinations
+  return(combinations_matrix)
+}
+```
+
+## 5(b)
 ```{r}
 mean_1 <- 150.03
 mean_2 <- 139.18
@@ -61,6 +78,23 @@ s_p_squared <- (s_1**2 * (n_1 - 1) + s_2**2 * (n_2 - 1)) / (n_1 + n_2 - 2)
 t_s <- (mean_1 - mean_2) / sqrt(s_p_squared * (1 / n_1 + 1 / n_2))
 
 t_s
+```
+
+## 7(d)
+```{r}
+high_schools <- c("HS 1", "HS 2", "HS 3")
+sections <- c("Section 1", "Section 2", "Section 3", "Section 4")
+instructions <- c("computerized", "in person")
+
+explanatory_var_combinations(high_schools, sections, instructions)
+```
+
+## 8(d)
+```{r}
+prior_fitness <- c("fitness below avg", "fitness avg", "fitness above avg")
+doctors <- c("doctor 1", "doctor 2", "doctor 3")
+
+explanatory_var_combinations(prior_fitness, doctors)
 ```
 
 ## I-IV
