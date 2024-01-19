@@ -28,28 +28,32 @@ d. $E[Y^*] = 5 - 2 * 200 = -395$
 ## 4
 a. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\bar{Y}_1 - \bar{Y}_2] = \mu_1 - \mu_2$
-<br>$\sigma^2[\bar{Y}_1 - \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} - \frac{\sigma_2^2}{100}}$
+<br>$\sigma^2[\bar{Y}_1 - \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
 b. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\bar{Y}_1 + \bar{Y}_2] = \mu_1 + \mu_2$
 <br>$\sigma^2[\bar{Y}_1 + \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
 c. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \frac{\mu_1 + \mu_2}{2} - \mu_3$
-<br>$\sigma^2[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \sqrt{\frac{\frac{\sigma_1^2}{100}+\frac{\sigma_2^2}{100}}{4} - \frac{\sigma_3^2}{100}}$
-d. $E[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \mu_1 + \mu_3 - 2 \mu_2$
+<br>$\sigma^2[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \sqrt{\frac{\frac{\sigma_1^2}{100}+\frac{\sigma_2^2}{100}}{4} + \frac{\sigma_3^2}{100}}$
+d. This is a normal distribution because a linear combination of normal distributions is also normal.
+<br>$E[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \mu_1 + \mu_3 - 2 \mu_2$
 <br>$\sigma^2[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_3^2}{100} - 4 * \frac{\sigma_2^2}{100}}$
 
 ## 5
-a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ. ??
+a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
 b. $t_s = 4.4037$ (see appendix for full calculation)
-<br> This value is the number of estimated standard deviations our sample mean difference is from the null hypothesis.
+<br> Sample difference in mean is 4.4037 standard deviations away from the null hypothesis.
 c. $p < 0.0005$
+<br> The p-value is the area of the tails in the standard distribution where we reject the null hypothesis.
 d. We reject the null hypothesis because $p < \alpha = 0.05$.
 
 ## 6
 a. Type I error would be incorrectly rejecting the null hypothesis, where we would fail to state that average systolic blood pressure is the same across smoking statuses when it is.
 b. Type II error is to fail to reject the null hypothesis, where we would fail to state that average systolic blood pressure differs between smoking statuses when it is.
-c. ??
-d. ??
+c. $t = \pm 2.585718$
+<br> Confidence interval is [4.479227, 17.22077].
+d. The confidence interval means that we are 99% certain the difference between the two means is between 4.479227 and 17.22077.
+e. The largest difference we expect between the two groups with 99% confidence is 17.22077. This means that we expect the mean of non-smokers to be at most 17.22077 less than the mean of smokers.
 
 ## 7
 a. This is a mixed study because there are both observational and experimental variables.
@@ -112,9 +116,19 @@ n_1 <- 266
 n_2 <- 234
 
 s_p_squared <- (s_1**2 * (n_1 - 1) + s_2**2 * (n_2 - 1)) / (n_1 + n_2 - 2)
-t_s <- (mean_1 - mean_2) / sqrt(s_p_squared * (1 / n_1 + 1 / n_2))
+sqrt_thingy <- sqrt(s_p_squared * (1 / n_1 + 1 / n_2))
+t_s <- (mean_1 - mean_2) / sqrt_thingy
 
 t_s
+```
+
+## 6(c)
+```{r}
+t <- 2.585718
+lower <- (mean_1 - mean_2) - t * sqrt_thingy
+upper <- (mean_1 - mean_2) + t * sqrt_thingy
+
+cat("[", lower, ", ", upper, "]", sep="")
 ```
 
 ## 7(d)
@@ -189,7 +203,7 @@ married <- data[marriage == "Y", "sbp"]
 single <- data[marriage == "N", "sbp"]
 
 hist(married, xlab = "sbp")
-hist(single, xlab="sbp")
+hist(single, xlab = "sbp")
 ```
 
 ### II(c)
