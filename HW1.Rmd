@@ -1,8 +1,9 @@
 # HW 1
 ## 1
-See output in appendix. Each row (not including headers) represents a possible combination. ??
-
 a. {(A, U), (A, E), (B, U), (B, E), (C, U), (C, E), (D, U), (D, E), (F, U), (F, E)}
+b. {(has cancer, young), (has cancer, middle), (has cancer, old), (no cancer, young), (no cancer, middle), (no cancer, old)}
+c. {(smoker, recently used), (smoker, used in past), (smoker, never used), (non-smoker, recently used), (non-smoker, used in past), (non-smoker, never used)}
+d. {(high intelligence, Border Collie), (high intelligence, German Sheprad), (high intelligence, Dachshund), (medium intelligence, Border Collie), (medium intelligence, German Sheprad), (medium intelligence, Dachshund), (low intelligence, Border Collie), (low intelligence, German Sheprad), (low intelligence, Dachshund)}
 
 ## 2
 a. $\mu_{U_1} = 3 + 4 = 7$
@@ -38,26 +39,29 @@ d. $E[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \mu_1 + \mu_3 - 2 \mu_2$
 <br>$\sigma^2[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_3^2}{100} - 4 * \frac{\sigma_2^2}{100}}$
 
 ## 5
-a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
+a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ. ??
 b. $t_s = 4.4037$ (see appendix for full calculation)
 <br> This value is the number of estimated standard deviations our sample mean difference is from the null hypothesis.
 c. $p < 0.0005$
 d. We reject the null hypothesis because $p < \alpha = 0.05$.
 
 ## 6
-a. ??
+a. Type I error would be incorrectly rejecting the null hypothesis, where we would fail to state that average systolic blood pressure is the same across smoking statuses when it is.
+b. Type II error is to fail to reject the null hypothesis, where we would fail to state that average systolic blood pressure differs between smoking statuses when it is.
+c. ??
+d. ??
 
 ## 7
 a. This is a mixed study because there are both observational and experimental variables.
 b. The primary variable of interest is test scores.
 c. The explanatory variables consists of observational and experimental variables. The high school and section number are the observational variables. The instruction (standard or computer-based) is the experimental variable.
-d. See output in appendix. Each row (not including headers) represents a possible combination.
+d. {(hs 1, section 1, computerized), (hs 1, section 1, in person), (hs 1, section 2, computerized), (hs 1, section 2, in person), (hs 1, section 3, computerized), (hs 1, section 3, in person), (hs 1, section 4, computerized), (hs 1, section 4, in person), (hs 2, section 1, computerized), (hs 1, section 2, in person), (hs 2, section 2, computerized), (hs 2, section 2, in person), (hs 2, section 3, computerized), (hs 2, section 3, in person), (hs 2, section 4, computerized), (hs 2, section 4, in person), (hs 3, section 1, computerized), (hs 3, section 1, in person), (hs 3, section 2, computerized), (hs 3, section 2, in person), (hs 3, section 3, computerized), (hs 3, section 3, in person), (hs 3, section 4, computerized), (hs 3, section 4, in person)}
 
 ## 8
 a. This is a mixed study because there are both observational and experimental variables.
 b. The primary variable of interest is number of days required for successful completion.
 c. The explanatory variables consists of observational and experimental variables. The prior physical fitness status (below average, average, above average) is the observational variable. The doctor they are paired with (out of three possible doctors) is the experimental variable.
-d. See output in appendix. Each row (not including headers) represents a possible combination.
+d. {(above average, doctor 1), (average, doctor 1), (below average, doctor 1), (above average, doctor 2), (average, doctor 2), (below average, doctor 2), (above average, doctor 3), (average, doctor 3), (below average, doctor 3)}
 
 ## I
 a. Low Stress had the highest average.
@@ -96,14 +100,6 @@ explanatory_var_combinations <- function(...) {
   # Return the matrix of combinations
   return(combinations_matrix)
 }
-```
-
-## 1(a)
-```{r}
-grades <- c("A", "B", "C", "D", "F")
-employment <- c("E", "U")
-
-explanatory_var_combinations(grades, employment)
 ```
 
 ## 5(b)
