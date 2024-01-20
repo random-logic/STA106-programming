@@ -6,14 +6,14 @@ c. {(smoker, recently used), (smoker, used in past), (smoker, never used), (non-
 d. {(high intelligence, Border Collie), (high intelligence, German Sheprad), (high intelligence, Dachshund), (medium intelligence, Border Collie), (medium intelligence, German Sheprad), (medium intelligence, Dachshund), (low intelligence, Border Collie), (low intelligence, German Sheprad), (low intelligence, Dachshund)}
 
 ## 2
-a. $\mu_{U_1} = 3 + 4 = 7$
+a. $\mu_{U_1} = 3 + 4 * 4 = 19$
 <br> $\sigma_{U_1} = 4 * 8 = 32$
-b. $\mu_{U_2} = -10 + 4 = -6$
+b. $\mu_{U_2} = -10 + 4 * 2 = -2$
 <br> $\sigma_{U_2} = 2 * 8 = 16$
-c. $\mu_{U_3} = 1/4 + 4 = 4.25$
+c. $\mu_{U_3} = \frac{1}{4} - 4 = -3.75$
 <br> $\sigma_{U_3} = 1 * 8 = 8$
-d. $\mu_{U_4} = 3/4 + 4 = 4.75$
-<br> $\sigma_{U_4} = 1/4 * 8 = 2$
+d. $\mu_{U_4} = \frac{3}{4} - 4 * \frac{1}{4} = -\frac{1}{4}$
+<br> $\sigma_{U_4} = \frac{1}{4} * 8 = 2$
 
 ## 3
 a. $E[\bar{Y}] = 20$
@@ -28,16 +28,16 @@ d. $E[Y^*] = 5 - 2 * 200 = -395$
 ## 4
 a. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\bar{Y}_1 - \bar{Y}_2] = \mu_1 - \mu_2$
-<br>$\sigma^2[\bar{Y}_1 - \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
+<br>$\sigma^2[\bar{Y}_1 - \bar{Y}_2] = {\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
 b. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\bar{Y}_1 + \bar{Y}_2] = \mu_1 + \mu_2$
-<br>$\sigma^2[\bar{Y}_1 + \bar{Y}_2] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
+<br>$\sigma^2[\bar{Y}_1 + \bar{Y}_2] = {\frac{\sigma_1^2}{100} + \frac{\sigma_2^2}{100}}$
 c. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \frac{\mu_1 + \mu_2}{2} - \mu_3$
-<br>$\sigma^2[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = \sqrt{\frac{\frac{\sigma_1^2}{100}+\frac{\sigma_2^2}{100}}{4} + \frac{\sigma_3^2}{100}}$
+<br>$\sigma^2[\frac{\bar{Y_1} + \bar{Y_2}}{2} - \bar{Y_3}] = {\frac{\frac{\sigma_1^2}{100}+\frac{\sigma_2^2}{100}}{4} + \frac{\sigma_3^2}{100}}$
 d. This is a normal distribution because a linear combination of normal distributions is also normal.
 <br>$E[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \mu_1 + \mu_3 - 2 \mu_2$
-<br>$\sigma^2[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \sqrt{\frac{\sigma_1^2}{100} + \frac{\sigma_3^2}{100} - 4 * \frac{\sigma_2^2}{100}}$
+<br>$\sigma^2[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = {\frac{\sigma_1^2}{100} + \frac{\sigma_3^2}{100} + 4 * \frac{\sigma_2^2}{100}}$
 
 ## 5
 a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
@@ -68,13 +68,13 @@ c. The explanatory variables consists of observational and experimental variable
 d. {(above average, doctor 1), (average, doctor 1), (below average, doctor 1), (above average, doctor 2), (average, doctor 2), (below average, doctor 2), (above average, doctor 3), (average, doctor 3), (below average, doctor 3)}
 
 ## I
-a. Low Stress had the highest average.
+a. High Stress had the highest average sbp.
 b. Yes, the standard deviations are approximately equal.
 c. Medium exercise has the lowest average age.
 d. Low exercise group differs most from its mean as it has the highest standard deviation.
 
 ## II
-a. There does not seem to be a trend as the boxplots have approximately the same means, lower quartiles, and upper quartiles.
+a. There does not seem to be a trend as the boxplots have approximately the same means, lower quartiles, and upper quartiles. The lower education has a slightly lower lower quartile and slightly higher upper quartile than the others.
 b. Both groups vary around the same amount since the range of data is around the same.
 c. Medium exercise has the highest proportion of high stress subjects.
 d. The has marriage group has the highest proportion of low stress subjects.
@@ -90,7 +90,7 @@ a. $t_s = 1.352333$
 b. $p = 0.1768947$
 c. $[-1.537372, 8.326066]$
 d. The confidence interval tells us the range one mean lies within the other on a normal distribution.
-e. ??
+e. The interval shows that one mean can lie above or below the other mean, so we cannot confidently say which group has a higher average sbp.
 
 # Appendix
 ```{r}
