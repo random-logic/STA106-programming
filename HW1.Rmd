@@ -120,6 +120,7 @@ d. {(above average, doctor 1), (average, doctor 1), (below average, doctor 1), (
 
 ## I(a)
 ```{r}
+
 # I-a
 res <- aggregate(sbp ~ stress, data = data, FUN = mean)
 colnames(res)[colnames(res) == "sbp"] <- "sbp_mean"
@@ -130,6 +131,7 @@ High Stress had the highest average sbp.
 
 ## I(b)
 ```{r}
+
 # I-b
 res <- aggregate(sbp ~ stress, data = data, FUN = sd)
 colnames(res)[colnames(res) == "sbp"] <- "sbp_sd"
@@ -140,6 +142,7 @@ Yes, the standard deviations are approximately equal.
 
 ## I(c)
 ```{r}
+
 # I-c
 res <- aggregate(age ~ exercise, data = data, FUN = mean)
 colnames(res)[colnames(res) == "age"] <- "age_mean"
@@ -150,6 +153,7 @@ Medium exercise has the lowest average age.
 
 ## I(d)
 ```{r}
+
 # I-d
 res <- aggregate(age ~ exercise, data = data, FUN = sd)
 colnames(res)[colnames(res) == "age"] <- "age_sd"
@@ -160,6 +164,7 @@ Low exercise group differs most from its mean as it has the highest standard dev
 
 ## II(a)
 ```{r}
+
 # II-a
 boxplot(sbp ~ education, data = data, xlab = "education", ylab = "sbp")
 ```
@@ -167,6 +172,7 @@ There does not seem to be a trend as the boxplots have approximately the same me
 
 ## II(b)
 ```{r}
+
 # II-b
 married <- data[marriage == "Y", "sbp"]
 single <- data[marriage == "N", "sbp"]
@@ -178,6 +184,7 @@ Both groups vary around the same amount since the range of data is around the sa
 
 ## II(c)
 ```{r}
+
 # II-c
 mosaicplot(table(exercise, stress))
 ```
@@ -185,6 +192,7 @@ Medium exercise has the highest proportion of high stress subjects.
 
 ## II(d)
 ```{r}
+
 # II-d
 mosaicplot(table(marriage, stress))
 ```
@@ -192,6 +200,7 @@ The has marriage group has the highest proportion of low stress subjects.
 
 ## III(a)
 ```{r}
+
 # III-a
 table(exercise)
 ```
@@ -199,6 +208,7 @@ Low exercise group has the most subjects.
 
 ## III(b)
 ```{r}
+
 # III-b
 high_ed_stress <- data[education == "HE", "stress"]
 table(high_ed_stress)
@@ -207,6 +217,7 @@ Middle stress group has the highest age.
 
 ## III(c)
 ```{r}
+
 # III-c
 res <- aggregate(age ~ stress, data = data, FUN = mean)
 colnames(res)[colnames(res) == "age"] <- "age_mean"
@@ -216,6 +227,7 @@ Middle stress group has the highest average age.
 
 ## III(d)
 ```{r}
+
 # III-d
 res <- aggregate(sbp ~ gender, data = data, FUN = mean)
 colnames(res)[colnames(res) == "sbp"] <- "sbp_mean"
@@ -225,6 +237,7 @@ Females have the lowest average systolic blood pressure.
 
 ## IV(a)
 ```{r}
+
 # IV-a
 res <- t.test(married, single, data = data)
 cat("t_s = ", res$statistic)
@@ -232,14 +245,18 @@ cat("t_s = ", res$statistic)
 
 ## IV(b)
 ```{r}
+
 # IV-b
 cat("p = ", res$p.value)
 ```
 
 ## IV(c)
 ```{r}
+
+# IV-c
 res$conf.int
 ```
+Confidence interval is $[-1.537372, 8.326066]$.
 
 ## IV(d)
 The confidence interval tells us the range one mean lies within the other on a normal distribution.
@@ -248,5 +265,5 @@ The confidence interval tells us the range one mean lies within the other on a n
 The interval shows that one mean can lie above or below the other mean, so we cannot confidently say which group has a higher average sbp.
 
 # Appendix
-```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```{r ref.label=knitr::all_labels(appendix = TRUE), echo=TRUE, eval=FALSE}
 ```
