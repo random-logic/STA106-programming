@@ -1,3 +1,18 @@
+```{r include=FALSE}
+# for correct formatting of paper
+knitr::opts_chunk$set(echo = FALSE)
+
+# preload all data
+data <- read.csv("GSK.csv")
+stress <- data$stress
+sbp <- data$sbp
+exercise <- data$exercise
+age <- data$age
+education <- data$educatn
+marriage <- data$married
+gender <- data$gender
+```
+
 # HW 1
 ## 1
 a. {(A, U), (A, E), (B, U), (B, E), (C, U), (C, E), (D, U), (D, E), (F, U), (F, E)}
@@ -39,21 +54,57 @@ d. This is a normal distribution because a linear combination of normal distribu
 <br>$E[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = \mu_1 + \mu_3 - 2 \mu_2$
 <br>$\sigma^2[\bar{Y_1} + \bar{Y_3} - 2 \bar{Y_2}] = {\frac{\sigma_1^2}{100} + \frac{\sigma_3^2}{100} + 4 * \frac{\sigma_2^2}{100}}$
 
-## 5
-a. The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
-b. $t_s = 4.4037$ (see appendix for full calculation)
-<br> Sample difference in mean is 4.4037 standard deviations away from the null hypothesis.
-c. $p < 0.0005$
-<br> The p-value is the area of the tails in the standard distribution where we reject the null hypothesis.
-d. We reject the null hypothesis because $p < \alpha = 0.05$.
+## 5(a)
+The null hypothesis is that the mean of smokers is equal to the mean of nonsmokers. The alternate hypothesis is that the two means differ.
 
-## 6
-a. Type I error would be incorrectly rejecting the null hypothesis, where we would fail to state that average systolic blood pressure is the same across smoking statuses when it is.
-b. Type II error is to fail to reject the null hypothesis, where we would fail to state that average systolic blood pressure differs between smoking statuses when it is.
-c. $t = \pm 2.585718$
-<br> Confidence interval is [4.479227, 17.22077].
-d. The confidence interval means that we are 99% certain the difference between the two means is between 4.479227 and 17.22077.
-e. The largest difference we expect between the two groups with 99% confidence is 17.22077. This means that we expect the mean of non-smokers to be at most 17.22077 less than the mean of smokers.
+## 5(b)
+```{r}
+
+# 5-b
+mean_1 <- 150.03
+mean_2 <- 139.18
+s_1 <- 27.49
+s_2 <- 27.49
+n_1 <- 266
+n_2 <- 234
+
+s_p_squared <- (s_1**2 * (n_1 - 1) + s_2**2 * (n_2 - 1)) / (n_1 + n_2 - 2)
+sqrt_thingy <- sqrt(s_p_squared * (1 / n_1 + 1 / n_2))
+t_s <- (mean_1 - mean_2) / sqrt_thingy
+
+cat("t_s = ", t_s)
+```
+Sample difference in mean is 4.4037 standard deviations away from the null hypothesis.
+
+## 5(c)
+$p < 0.0005$
+<br> The p-value is the area of the tails in the standard distribution where we reject the null hypothesis.
+
+## 5(d)
+We reject the null hypothesis because $p < \alpha = 0.05$.
+
+## 6(a)
+Type I error would be incorrectly rejecting the null hypothesis, where we would fail to state that average systolic blood pressure is the same across smoking statuses when it is.
+
+## 6(b)
+Type II error is to fail to reject the null hypothesis, where we would fail to state that average systolic blood pressure differs between smoking statuses when it is.
+
+## 6(c)
+```{r}
+
+# 6-c
+t <- 2.585718
+lower <- (mean_1 - mean_2) - t * sqrt_thingy
+upper <- (mean_1 - mean_2) + t * sqrt_thingy
+
+cat("Confidence interval is [", lower, ", ", upper, "]", sep = "")
+```
+
+## 6(d)
+The confidence interval means that we are 99% certain the difference between the two means is between 4.479227 and 17.22077.
+
+## 6(e)
+The largest difference we expect between the two groups with 99% confidence is 17.22077. This means that we expect the mean of non-smokers to be at most 17.22077 less than the mean of smokers.
 
 ## 7
 a. This is a mixed study because there are both observational and experimental variables.
@@ -67,192 +118,135 @@ b. The primary variable of interest is number of days required for successful co
 c. The explanatory variables consists of observational and experimental variables. The prior physical fitness status (below average, average, above average) is the observational variable. The doctor they are paired with (out of three possible doctors) is the experimental variable.
 d. {(above average, doctor 1), (average, doctor 1), (below average, doctor 1), (above average, doctor 2), (average, doctor 2), (below average, doctor 2), (above average, doctor 3), (average, doctor 3), (below average, doctor 3)}
 
-## I
-a. High Stress had the highest average sbp.
-b. Yes, the standard deviations are approximately equal.
-c. Medium exercise has the lowest average age.
-d. Low exercise group differs most from its mean as it has the highest standard deviation.
-
-## II
-a. There does not seem to be a trend as the boxplots have approximately the same means, lower quartiles, and upper quartiles. The lower education has a slightly lower lower quartile and slightly higher upper quartile than the others.
-b. Both groups vary around the same amount since the range of data is around the same.
-c. Medium exercise has the highest proportion of high stress subjects.
-d. The has marriage group has the highest proportion of low stress subjects.
-
-## III
-a. Low exercise group has the most subjects.
-b. Middle stress group has the highest age.
-c. Middle stress group has the highest average age.
-d. Females have the lowest average systolic blood pressure.
-
-## IV
-a. $t_s = 1.352333$
-b. $p = 0.1768947$
-c. $[-1.537372, 8.326066]$
-d. The confidence interval tells us the range one mean lies within the other on a normal distribution.
-e. The interval shows that one mean can lie above or below the other mean, so we cannot confidently say which group has a higher average sbp.
-
-# Appendix
+## I(a)
 ```{r}
-explanatory_var_combinations <- function(...) {
-  # Create a data frame with all combinations
-  combinations_df <- expand.grid(...)
-
-  # Convert the data frame to a matrix
-  combinations_matrix <- as.matrix(combinations_df)
-
-  # Return the matrix of combinations
-  return(combinations_matrix)
-}
-```
-
-## 5(b)
-```{r}
-mean_1 <- 150.03
-mean_2 <- 139.18
-s_1 <- 27.49
-s_2 <- 27.49
-n_1 <- 266
-n_2 <- 234
-
-s_p_squared <- (s_1**2 * (n_1 - 1) + s_2**2 * (n_2 - 1)) / (n_1 + n_2 - 2)
-sqrt_thingy <- sqrt(s_p_squared * (1 / n_1 + 1 / n_2))
-t_s <- (mean_1 - mean_2) / sqrt_thingy
-
-t_s
-```
-
-## 6(c)
-```{r}
-t <- 2.585718
-lower <- (mean_1 - mean_2) - t * sqrt_thingy
-upper <- (mean_1 - mean_2) + t * sqrt_thingy
-
-cat("[", lower, ", ", upper, "]", sep="")
-```
-
-## 7(d)
-```{r}
-high_schools <- c("HS 1", "HS 2", "HS 3")
-sections <- c("Section 1", "Section 2", "Section 3", "Section 4")
-instructions <- c("computerized", "in person")
-
-explanatory_var_combinations(high_schools, sections, instructions)
-```
-
-## 8(d)
-```{r}
-prior_fitness <- c("fitness below avg", "fitness avg", "fitness above avg")
-doctors <- c("doctor 1", "doctor 2", "doctor 3")
-
-explanatory_var_combinations(prior_fitness, doctors)
-```
-
-## I-IV
-```{r}
-data <- read.csv("GSK.csv")
-stress <- data$stress
-sbp <- data$sbp
-exercise <- data$exercise
-age <- data$age
-education <- data$educatn
-marriage <- data$married
-gender <- data$gender
-```
-
-### I(a)
-```{r}
+# I-a
 res <- aggregate(sbp ~ stress, data = data, FUN = mean)
 colnames(res)[colnames(res) == "sbp"] <- "sbp_mean"
 
 res
 ```
+High Stress had the highest average sbp.
 
-### I(b)
+## I(b)
 ```{r}
+# I-b
 res <- aggregate(sbp ~ stress, data = data, FUN = sd)
 colnames(res)[colnames(res) == "sbp"] <- "sbp_sd"
 
 res
 ```
+Yes, the standard deviations are approximately equal.
 
-### I(c)
+## I(c)
 ```{r}
+# I-c
 res <- aggregate(age ~ exercise, data = data, FUN = mean)
 colnames(res)[colnames(res) == "age"] <- "age_mean"
 
 res
 ```
+Medium exercise has the lowest average age.
 
-### I(d)
+## I(d)
 ```{r}
+# I-d
 res <- aggregate(age ~ exercise, data = data, FUN = sd)
 colnames(res)[colnames(res) == "age"] <- "age_sd"
 
 res
 ```
+Low exercise group differs most from its mean as it has the highest standard deviation.
 
-### II(a)
+## II(a)
 ```{r}
+# II-a
 boxplot(sbp ~ education, data = data, xlab = "education", ylab = "sbp")
 ```
+There does not seem to be a trend as the boxplots have approximately the same means, lower quartiles, and upper quartiles. The lower education has a slightly lower lower quartile and slightly higher upper quartile than the others.
 
-### II(b)
+## II(b)
 ```{r}
+# II-b
 married <- data[marriage == "Y", "sbp"]
 single <- data[marriage == "N", "sbp"]
 
 hist(married, xlab = "sbp")
 hist(single, xlab = "sbp")
 ```
+Both groups vary around the same amount since the range of data is around the same.
 
-### II(c)
+## II(c)
 ```{r}
+# II-c
 mosaicplot(table(exercise, stress))
 ```
+Medium exercise has the highest proportion of high stress subjects.
 
-### II(d)
+## II(d)
 ```{r}
+# II-d
 mosaicplot(table(marriage, stress))
 ```
+The has marriage group has the highest proportion of low stress subjects.
 
-### III(a)
+## III(a)
 ```{r}
+# III-a
 table(exercise)
 ```
+Low exercise group has the most subjects.
 
-### III(b)
+## III(b)
 ```{r}
+# III-b
 high_ed_stress <- data[education == "HE", "stress"]
 table(high_ed_stress)
 ```
+Middle stress group has the highest age.
 
-### III(c)
+## III(c)
 ```{r}
+# III-c
 res <- aggregate(age ~ stress, data = data, FUN = mean)
 colnames(res)[colnames(res) == "age"] <- "age_mean"
 res
 ```
+Middle stress group has the highest average age.
 
-### III(d)
+## III(d)
 ```{r}
+# III-d
 res <- aggregate(sbp ~ gender, data = data, FUN = mean)
 colnames(res)[colnames(res) == "sbp"] <- "sbp_mean"
 res
 ```
+Females have the lowest average systolic blood pressure.
 
-### IV(a)
+## IV(a)
 ```{r}
+# IV-a
 res <- t.test(married, single, data = data)
-res$statistic
+cat("t_s = ", res$statistic)
 ```
 
-### IV(b)
+## IV(b)
 ```{r}
-res$p.value
+# IV-b
+cat("p = ", res$p.value)
 ```
 
-### IV(c)
+## IV(c)
 ```{r}
 res$conf.int
+```
+
+## IV(d)
+The confidence interval tells us the range one mean lies within the other on a normal distribution.
+
+## IV(e)
+The interval shows that one mean can lie above or below the other mean, so we cannot confidently say which group has a higher average sbp.
+
+# Appendix
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
 ```
