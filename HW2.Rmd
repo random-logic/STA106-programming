@@ -56,7 +56,7 @@ sse / df_sse
 
 # 2
 a. The variance for each group is not constant because the variances between groups are different.
-b. Seems like group 3 has the fastest recovery time. We cannot tell if it's statistically significantly faster because the mean of group 3 is within 3 standard deviations of the slowest group.
+b. Seems like group 3 has the fastest recovery time. We cannot tell if it's statistically significantly faster because the mean of group 3 is within 3 standard deviations of the slowest group. ??
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
