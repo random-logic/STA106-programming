@@ -1,0 +1,63 @@
+```{r echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# 1
+a. $\hat{\mu}_1 = 38$, $\hat{\mu}_2 = 32$, $\hat{\mu}_3 = 24$
+b. $E[Y_{1j}] = 38$, $E[Y_{2j}] = 32$, $E[Y_{3j}] = 24$
+c. $SSTO = s^2_Y (n_T - 1) = 1088.691$
+<br> $SSA = 672$
+<br> $SSE = SSTO - SSA = 416.6912$
+```{r}
+
+# 1-c
+s <- 6.88
+n <- 24
+n_i <- c(8, 10, 6)
+
+ssto <- s ** 2 * (n - 1)
+
+y_bar_i_dot <- c(38, 32, 24)
+y_bar_dot_dot <- 32
+
+ssa <- sum(n_i * (y_bar_i_dot - y_bar_dot_dot) ** 2)
+sse <- ssto - ssa
+
+ssto
+ssa
+sse
+```
+d. $d.f.[SSTO] = n_T - 1 = 23$
+<br> $d.f.[SSA] = a - 1 = 2$
+<br> $d.f.[SSE] = n_T - a = 21$
+```{r}
+
+# 1-d
+a <- 3
+
+df_ssto <- n - 1
+df_ssa <- a - 1
+df_sse <- n - a
+
+df_ssto
+df_ssa
+df_sse
+```
+e. $MSTO = \frac{SSTO}{d.f.[SSTO]} = 47.3344$
+<br> $MSA = \frac{SSA}{d.f.[SSA]} = 336$
+<br> $MSE = \frac{SSE}{d.f.[SSE]} = 19.84244$
+```{r}
+
+# 1-e
+ssto / df_ssto
+ssa / df_ssa
+sse / df_sse
+```
+
+# 2
+a. The variance for each group is not constant because the variances between groups are different.
+b. Seems like group 3 has the fastest recovery time. We cannot tell if it's statistically significantly faster because the mean of group 3 is within 3 standard deviations of the slowest group.
+
+# Appendix
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
