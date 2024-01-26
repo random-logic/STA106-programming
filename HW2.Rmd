@@ -160,6 +160,29 @@ b. False, it depends on what the null hypothesis is. It does not always have to 
 c. True, the probability of a type 1 error is $\alpha$.
 d. True, in theory, it can be the case that all sample means are equal to the total mean, although this is unlikely in practice.
 
+# I
+a. There seems to be significant differnces between the different groups because the mean of Bronchus is far away from the mean of Breast (mean of Bronchus is below the 25th percentile of Breast).
+```{r}
+data <- read.csv("Cancer.csv")
+
+boxplot(Survival ~ Organ, data = data, 
+        main = "Group Box Plot of Survival by Organ Type",
+        xlab = "Organ",
+        ylab = "Survival",
+        col = "lightblue",
+        border = "black")
+```
+b. The averages are displayed in the table below. I believe that we will reject the single factor ANOVA because the mean of Breast is far from the mean of Bronchus relative to the variance. ?? nice formatted table?
+```{r}
+avg_by_organ <- tapply(data$Survival, data$Organ, mean)
+avg_by_organ
+```
+c. No, because the range between the 25th and 75th percentile of each organ differs significantly.
+d. ??
+
+# II
+
+
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
 ```
