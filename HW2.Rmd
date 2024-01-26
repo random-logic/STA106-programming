@@ -76,13 +76,13 @@ a. $\mu_M - \mu = 27.75 - 23.56 = 4.19$
 <br> $\mu_O - \mu = 21.42 - 23.56 = -2.14$
 <br> $\mu_Y - \mu = 21.50 - 23.56 = -2.06$
 b. It represents how far the group mean is from the overall mean.
-c. $SSTO = 118.3$, $SSA = 316.5516$, $SSE = -198.2516$
+c. $SSTO = 399.854$, $SSA = 316.5516$, $SSE = 83.3024$
 ```{r}
 
 # 3-c
 means <- c(27.75, 21.42, 21.50)
 overall_mean <- 23.56
-variance <- 3.38
+variance <- 3.38 ** 2
 n <- c(12, 12, 12)
 
 n_t <- sum(n)
@@ -94,7 +94,7 @@ ssto
 ssa
 sse
 ```
-d. $d.f.[SSTO] = 35$, $d.f.[SSA] = 2$, $d.f.[SSE] = 35$
+d. $d.f.[SSTO] = 35$, $d.f.[SSA] = 2$, $d.f.[SSE] = 33$
 ```{r}
 
 # 3-d
@@ -102,13 +102,13 @@ a <- 3
 
 df_ssto <- n_t - 1
 df_ssa <- a - 1
-df_sse <- n_t - 1
+df_sse <- n_t - a
 
 df_ssto
 df_ssa
 df_sse
 ```
-e. $MSTO = 3.38$, $MSA = 158.2758$, $MSE = -5.664331$
+e. $MSTO = 11.4244$, $MSA = 158.2758$, $MSE = 2.524315$
 ```{r}
 
 # 3-e
@@ -123,15 +123,19 @@ mse
 
 # 4
 a. It appears that group M differs significantly from group O and Y because the mean of group M is more than three standard deviations away from the mean of group O and Y.
-b. The distribution of $\bar{Y}_2$ ??
+b. The distribution of $\bar{Y}_2$ is normal where $\bar{Y}_2 \sim N(21.50, 1.73)$
 c. $H_0: \mu_M = \mu_O = \mu_Y$
 <br> $H_A:$ at least one population average is different (not equal) for the training methods
-<br> $F_s = -27.94254$ ?? weird number
+<br> $F_s = 62.70049$
 ```{r}
 
 # 4-c
 msa / mse
 ```
+d. $p < 0.0001$
+<br> This is the area under the two tails of the normal distribution curve.
+e. Since $p < \alpha$ when $\alpha = 0.01$, we reject the null hypothesis. Therefore, the groups differ significantly.
+f. The groups that are most likely to differ significantly is group M and O and group M and Y because their means are more than 3 standard deviations apart.  
 
 # 5
 a. $\sum_j e_{ij}$
