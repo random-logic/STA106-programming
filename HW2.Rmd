@@ -59,8 +59,8 @@ mse
 ```
 
 # 2
-a. The variance for each group is not constant because the variances between groups are different.
-b. Seems like group 3 has the fastest recovery time. We cannot tell if it's statistically significantly faster because the mean of group 3 is within 3 standard deviations of the slowest group. ??
+a. The variance for each group is not constant because the variances between groups are different. ??
+b. Seems like group 3 has the fastest recovery time. I do believe that group 3 is statistically significantly faster than group 1 because the mean of group 3 is around 3 standard deviations away from the mean of group 1.
 c. $H_0: \mu_1 = \mu_2 = \mu_3$
 <br> $H_A:$ at least one population average is different (not equal) for the training methods
 d. $F_s = 16.9334$, $p < 0.0001$
@@ -132,6 +132,23 @@ c. $H_0: \mu_M = \mu_O = \mu_Y$
 # 4-c
 msa / mse
 ```
+
+# 5
+a. $\sum_j e_{ij}$
+<br> $\to \sum_j (Y_{ij} - \mu_i)$
+<br> $\to \sum_j Y_{ij} - \sum_j \mu_i$
+<br> $\to \sum_j Y_{ij} - n_i * \mu_i$
+<br> $\to \sum_j Y_{ij} - n_i * \frac{\sum_j Y_{ij}}{n_i}$
+<br> $\to 0$
+b. $\sum_i \sum_j e_{ij} = \sum_i 0 = 0$
+c. $\sum_i \sum_j (\bar{Y}_{i.} - \bar{Y}_{..})(e_{ij})$
+<br> $\to \sum_i \sum_j (\bar{Y}_{i.} * e_{ij} - \bar{Y}_{..} * e_{ij})$
+<br> $\to \sum_i \sum_j (\bar{Y}_{i.})(e_{ij}) - \sum_i \sum_j (\bar{Y}_{..})(e_{ij})$
+<br> $\to \sum_i (\bar{Y}_{i.})(\sum_j e_{ij}) - \bar{Y}_{..} * \sum_i \sum_j e_{ij}$
+<br> $\to \sum_i (\bar{Y}_{i.})(0) - \bar{Y}_{..} * 0$
+<br> $\to 0$
+d. $E[\bar{Y}_{..}] = \frac{\sum_i \bar{Y}_{i.}}{n_T} = \frac{\sum_i \sum_j \bar{Y}_{ij}}{n_T} = \frac{\sum_i n_i \mu_i}{n_T} = \mu_.$
+e. $\sigma^2(Y_{ij}) = \sigma^2(\mu_i) + \sigma^2(\epsilon) = 0 + \sigma^2_\epsilon = \sigma^2_\epsilon$
 
 # 6
 a. This is true, and is exactly the reason why we need to use $MSTO = \frac{SSTO}{d.f.[SSTO]}$ to normalize the result.
