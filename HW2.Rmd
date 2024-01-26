@@ -49,14 +49,95 @@ e. $MSTO = \frac{SSTO}{d.f.[SSTO]} = 47.3344$
 ```{r}
 
 # 1-e
-ssto / df_ssto
-ssa / df_ssa
-sse / df_sse
+msto <- ssto / df_ssto
+msa <- ssa / df_ssa
+mse <- sse / df_sse
+
+msto
+msa
+mse
 ```
 
 # 2
 a. The variance for each group is not constant because the variances between groups are different.
 b. Seems like group 3 has the fastest recovery time. We cannot tell if it's statistically significantly faster because the mean of group 3 is within 3 standard deviations of the slowest group. ??
+c. $H_0: \mu_1 = \mu_2 = \mu_3$
+<br> $H_A:$ at least one population average is different (not equal) for the training methods
+d. $F_s = 16.9334$, $p < 0.0001$
+```{r}
+
+# 2-d
+msa / mse
+```
+e. Since $p < \alpha$ when $\alpha = 0.01$, we reject the null hypothesis. Therefore, group 3 has a significantly faster recovery time than group 1 since the means are not equal and these groups have the biggest difference in means.
+
+# 3
+a. $\mu_M - \mu = 27.75 - 23.56 = 4.19$
+<br> $\mu_O - \mu = 21.42 - 23.56 = -2.14$
+<br> $\mu_Y - \mu = 21.50 - 23.56 = -2.06$
+b. It represents how far the group mean is from the overall mean.
+c. $SSTO = 118.3$, $SSA = 316.5516$, $SSE = -198.2516$
+```{r}
+
+# 3-c
+means <- c(27.75, 21.42, 21.50)
+overall_mean <- 23.56
+variance <- 3.38
+n <- c(12, 12, 12)
+
+n_t <- sum(n)
+ssto <- variance * (n_t - 1)
+ssa <- sum(n * (means - overall_mean) ** 2)
+sse <- ssto - ssa
+
+ssto
+ssa
+sse
+```
+d. $d.f.[SSTO] = 35$, $d.f.[SSA] = 2$, $d.f.[SSE] = 35$
+```{r}
+
+# 3-d
+a <- 3
+
+df_ssto <- n_t - 1
+df_ssa <- a - 1
+df_sse <- n_t - 1
+
+df_ssto
+df_ssa
+df_sse
+```
+e. $MSTO = 3.38$, $MSA = 158.2758$, $MSE = -5.664331$
+```{r}
+
+# 3-e
+msto <- ssto / df_ssto
+msa <- ssa / df_ssa
+mse <- sse / df_sse
+
+msto
+msa
+mse
+```
+
+# 4
+a. It appears that group M differs significantly from group O and Y because the mean of group M is more than three standard deviations away from the mean of group O and Y.
+b. The distribution of $\bar{Y}_2$ ??
+c. $H_0: \mu_M = \mu_O = \mu_Y$
+<br> $H_A:$ at least one population average is different (not equal) for the training methods
+<br> $F_s = -27.94254$ ?? weird number
+```{r}
+
+# 4-c
+msa / mse
+```
+
+# 6
+a. This is true, and is exactly the reason why we need to use $MSTO = \frac{SSTO}{d.f.[SSTO]}$ to normalize the result.
+b. False, it depends on what the null hypothesis is. It does not always have to be that all means are equal.
+c. True, the probability of a type 1 error is $\alpha$.
+d. True, in theory, it can be the case that all sample means are equal to the total mean, although this is unlikely in practice.
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
