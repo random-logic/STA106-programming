@@ -163,6 +163,8 @@ d. True, in theory, it can be the case that all sample means are equal to the to
 # I
 a. There seems to be significant differnces between the different groups because the mean of Bronchus is far away from the mean of Breast (mean of Bronchus is below the 25th percentile of Breast).
 ```{r}
+
+# I-a
 data <- read.csv("Cancer.csv")
 
 boxplot(Survival ~ Organ, data = data, 
@@ -174,6 +176,8 @@ boxplot(Survival ~ Organ, data = data,
 ```
 b. The averages are displayed in the table below. I believe that we will reject the single factor ANOVA because the mean of Breast is far from the mean of Bronchus relative to the variance. ?? nice formatted table?
 ```{r}
+
+# I-b
 avg_by_organ <- tapply(data$Survival, data$Organ, mean)
 avg_by_organ
 ```
@@ -181,7 +185,20 @@ c. No, because the range between the 25th and 75th percentile of each organ diff
 d. ??
 
 # II
+```{r}
 
+# II-a
+n_t <- nrow(data)
+overall_mean <- mean(data$Survival)
+
+ssto <- sum((data$Survival - overall_mean) ** 2)
+
+mean_per_group <- aggregate(Survival ~ Organ, data = data, FUN = mean)
+count_per_group <- aggregate(Survival ~ Organ, data = data, FUN = length)
+
+mean_per_group
+count_per_group
+```
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
