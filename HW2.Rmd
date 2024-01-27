@@ -170,11 +170,9 @@ data <- read.csv("Cancer.csv")
 boxplot(Survival ~ Organ, data = data, 
         main = "Group Box Plot of Survival by Organ Type",
         xlab = "Organ",
-        ylab = "Survival",
-        col = "lightblue",
-        border = "black")
+        ylab = "Survival")
 ```
-b. The averages are displayed in the table below. I believe that we will reject the single factor ANOVA because the mean of Breast is far from the mean of Bronchus relative to the variance. ?? nice formatted table?
+b. The averages are displayed in the table below. I believe that we will reject the single factor ANOVA because the mean of Breast is far from the mean of Bronchus relative to the variance.
 ```{r}
 
 # I-b
@@ -182,9 +180,10 @@ avg_by_organ <- tapply(data$Survival, data$Organ, mean)
 avg_by_organ
 ```
 c. No, because the range between the 25th and 75th percentile of each organ differs significantly.
-d. ??
+d. It would make sense to have a high $\alpha$ value to maximize chances of a type I error.
 
 # II
+a.
 ```{r}
 
 # II-a
@@ -194,11 +193,122 @@ overall_mean <- mean(data$Survival)
 ssto <- sum((data$Survival - overall_mean) ** 2)
 
 mean_per_group <- aggregate(Survival ~ Organ, data = data, FUN = mean)
+mean_per_group <- mean_per_group$Survival
 count_per_group <- aggregate(Survival ~ Organ, data = data, FUN = length)
+count_per_group <- count_per_group$Survival
 
-mean_per_group
-count_per_group
+ssa <- sum(count_per_group * (mean_per_group - overall_mean) ** 2)
+sse <- ssto - ssa
+
+cat("SSTO =", ssto)
+cat("SSA =", ssa)
+cat("SSE =", sse)
 ```
+
+b.
+```{r}
+
+# II-b
+a <- nrow(aggregate(Survival ~ Organ, data = data, FUN = length))
+
+df_ssto <- n_t - 1
+df_ssa <- a - 1
+dff_sse <- n_t - a
+
+msto <- ssto / df_ssto
+msa <- ssa / df_ssa
+mse <- sse / df_sse
+
+cat("MSTO =", msto)
+cat("MSA =", msa)
+cat("MSE =", mse)
+```
+
+c. $f_s = 3.598363$, $d.f.[ssa] = 4$, $d.f.[sse] = 33$, $0.01 < p < 0.02$
+```{r}
+
+# II-c
+f_s <- msa / mse
+f_s
+df_ssa
+df_sse
+```
+
+d. Since $p < \alpha$ when $\alpha = 0.05$, we reject the null hypothesis. Therefore, the survival time is not the same across groups.
+
+# III
+a. The table of standard deviations per group is as follows (where standard deviation is under the wing column).
+```{r}
+data <- read.csv("Hawk.csv")
+
+# III-a
+sd_by_group <- aggregate(Wing ~ Species, data = data, FUN = sd)
+sd_by_group
+```
+b. <br>
+```{r}
+
+# III-b
+for (specie in unique(data$Species)) {
+  group_data <- data$Wing[data$Species == specie]
+  hist(group_data, main = specie, xlab = "Wing Length")
+}
+```
+c. I believe the assumption of equal variance is not met because the range of all three histograms (excluding outliers) are signficantly different (around 75 for SS, 300 for CH, and 200 for RT).
+d. The RT group appears to have the largest wing feather length.
+e. The SS group appears to have the smallest variance.
+
+# IV
+a. 
+```{r}
+
+# IV-a
+n_t <- nrow(data)
+overall_mean <- mean(data$Wing)
+
+ssto <- sum((data$Wing - overall_mean) ** 2)
+
+mean_per_group <- aggregate(Wing ~ Species, data = data, FUN = mean)
+mean_per_group <- mean_per_group$Wing
+count_per_group <- aggregate(Wing ~ Species, data = data, FUN = length)
+count_per_group <- count_per_group$Wing
+
+ssa <- sum(count_per_group * (mean_per_group - overall_mean) ** 2)
+sse <- ssto - ssa
+
+cat("SSTO =", ssto)
+cat("SSA =", ssa)
+cat("SSE =", sse)
+```
+b.
+```{r}
+
+# IV-b
+a <- nrow(aggregate(Wing ~ Species, data = data, FUN = length))
+
+df_ssto <- n_t - 1
+df_ssa <- a - 1
+dff_sse <- n_t - a
+
+msto <- ssto / df_ssto
+msa <- ssa / df_ssa
+mse <- sse / df_sse
+
+cat("MSTO =", msto)
+cat("MSA =", msa)
+cat("MSE =", mse)
+```
+c. $f_s = 159.2843$, $d.f.[ssa] = 2$, $d.f.[sse] = 33$, $p < 0.0001$
+```{r}
+
+# IV-c
+f_s <- msa / mse
+f_s
+df_ssa
+df_sse
+```
+d. Since $p < \alpha$ when $\alpha = 0.05$, we reject the null hypothesis. Therefore, the wing length is not the same across species.
+e. The p-value is the area under the tails of the normal curve.
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
