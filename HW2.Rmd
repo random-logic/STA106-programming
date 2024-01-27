@@ -213,7 +213,7 @@ a <- nrow(aggregate(Survival ~ Organ, data = data, FUN = length))
 
 df_ssto <- n_t - 1
 df_ssa <- a - 1
-dff_sse <- n_t - a
+df_sse <- n_t - a
 
 msto <- ssto / df_ssto
 msa <- ssa / df_ssa
@@ -224,14 +224,17 @@ cat("MSA =", msa)
 cat("MSE =", mse)
 ```
 
-c. $f_s = 3.598363$, $d.f.[ssa] = 4$, $d.f.[sse] = 33$, $0.01 < p < 0.02$
+c.
 ```{r}
 
 # II-c
 f_s <- msa / mse
-f_s
-df_ssa
-df_sse
+p <- pf(f_s, df_ssa, df_sse, lower.tail = FALSE)
+
+cat("f_s =", f_s)
+cat("df_ssa =", df_ssa)
+cat("df_sse =", df_sse)
+cat("p =", p)
 ```
 
 d. Since $p < \alpha$ when $\alpha = 0.05$, we reject the null hypothesis. Therefore, the survival time is not the same across groups.
@@ -298,14 +301,17 @@ cat("MSTO =", msto)
 cat("MSA =", msa)
 cat("MSE =", mse)
 ```
-c. $f_s = 159.2843$, $d.f.[ssa] = 2$, $d.f.[sse] = 33$, $p < 0.0001$
+c.
 ```{r}
 
 # IV-c
 f_s <- msa / mse
-f_s
-df_ssa
-df_sse
+p <- pf(f_s, df_ssa, df_sse, lower.tail = FALSE)
+
+cat("f_s =", f_s)
+cat("df_ssa =", df_ssa)
+cat("df_sse =", df_sse)
+cat("p =", p)
 ```
 d. Since $p < \alpha$ when $\alpha = 0.05$, we reject the null hypothesis. Therefore, the wing length is not the same across species.
 e. The p-value is the area under the tails of the normal curve.
