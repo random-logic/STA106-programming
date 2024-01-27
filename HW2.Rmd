@@ -2,7 +2,7 @@
 title: "STA 106 HW2"
 author: "Andrew Jowe"
 date: "`r Sys.Date()`"
-output: html_document
+output: pdf_document
 ---
 
 ```{r echo=FALSE}
@@ -158,8 +158,8 @@ c. $\sum_i \sum_j (\bar{Y}_{i.} - \bar{Y}_{..})(e_{ij})$
 <br> $\to \sum_i (\bar{Y}_{i.})(\sum_j e_{ij}) - \bar{Y}_{..} * \sum_i \sum_j e_{ij}$
 <br> $\to \sum_i (\bar{Y}_{i.})(0) - \bar{Y}_{..} * 0$
 <br> $\to 0$
-d. $E[\bar{Y}_{..}] = \frac{\sum_i \bar{Y}_{i.}}{n_T} = \frac{\sum_i \sum_j \bar{Y}_{ij}}{n_T} = \frac{\sum_i n_i \mu_i}{n_T} = \mu_.$
-e. $\sigma^2(Y_{ij}) = \sigma^2(\mu_i) + \sigma^2(\epsilon) = 0 + \sigma^2_\epsilon = \sigma^2_\epsilon$
+d. $E[\bar{Y}_{..}] = \frac{\sum_i \bar{Y}_{i.}}{n_T} = \frac{\sum_i \sum_j Y_{ij}}{n_T} = \frac{\sum_i n_i \mu_i}{n_T} = \mu_.$
+e. $\sigma^2(Y_{ij}) = \sigma^2(\mu_i + \epsilon) = \sigma^2(\mu_i) + \sigma^2(\epsilon) = 0 + \sigma^2_\epsilon = \sigma^2_\epsilon$
 
 # 6
 a. This is true, and is exactly the reason why we need to use $MSTO = \frac{SSTO}{d.f.[SSTO]}$ to normalize the result.
