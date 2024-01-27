@@ -66,7 +66,7 @@ mse
 ```
 
 # 2
-a. The variance for each group is not constant because the variances between groups are different. ??
+a. The variance for each group is not constant because the variances between groups are different.
 b. Seems like group 3 has the fastest recovery time. I do believe that group 3 is statistically significantly faster than group 1 because the mean of group 3 is around 3 standard deviations away from the mean of group 1.
 c. $H_0: \mu_1 = \mu_2 = \mu_3$
 <br> $H_A:$ at least one population average is different (not equal) for the training methods
