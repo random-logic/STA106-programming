@@ -1,0 +1,27 @@
+```{r echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Introduction
+The question we want to answer is whether the different nests attracted different size sparrows. This experiment is important because it helps us understand the impact of nesting environments on the size of sparrows. If certain nests attract larger sparrows, it could provide insights into their habitat preferences and reproductive success. This information can be valuable for conservation efforts and improving habitat management for bird populations. 
+
+Our null hypothesis is that the different nests did not attract different size sparrows (the average size sparrow each nest attracted is around the same). Our alternate hypothesis is that at least one nest attracted a different size sparrow (the average size sparrow for at least one nest is different). To figure out whether to support or reject our null hypothesis, we can use: ??
+
+# Summary
+
+```{r}
+
+# 1
+x <- 1
+x
+```
+
+```{r}
+
+# 2
+y <- 2
+y
+```
+
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
