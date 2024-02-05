@@ -80,7 +80,7 @@ The first assumption of the ANOVA model requires us to know the sampling techniq
 
 The second assumption means that the size of birds one nest attracts do not affect the size of birds other nests attracts. One way this assumption can be violated is if the birds have a ranked preference for the nests. For example, let's say all birds prefer the enlarged over the control and the control over the reduced. Then whether a bird is attracted to the control depends on whether it is attracted to the enlarged nest. In this case, a bird will only consider the control nest under the condition that it is not attracted to the enlarged nest. We cannot tell if this is violated because we have no information about the preferences, but for simplicity, we will also assume that the birds have only one preference for nest.
 
-Our last assumption holds due to central limit theorem (figure 3) and the fact that our data looks approximately normal (figure 1). To confirm our results, we can do a qqplot
+Our last assumption holds due to central limit theorem (figure 3) and the fact that our data looks approximately normal (figure 1). To confirm our results, we can do a normal qqplot. ??
 
 Our assumptions for the power test and sample size calculations is:
 
