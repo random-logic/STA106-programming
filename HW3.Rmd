@@ -73,8 +73,9 @@ a. Todo: ??
 
 # 3-b
 alpha <- 0.01
+g <- 2
 n_T <- sum(n_i)
-critical_t <- qt(1 - alpha, n_T - a)
+critical_t <- qt(1 - alpha / (2 * g), n_T - a) # Bonferroni correction
 lower_bound <- round(
   mu_i[1] - mu_i[3] - critical_t * sqrt(MSE * (1 / n_i[1] + 1 / n_i[3])),
   4
@@ -84,12 +85,39 @@ upper_bound <- round(
   4
 )
 ```
-b. $\mu_1 - \mu_3 \in [`r lower_bound`, `r upper_bound`]$
+b. $\mu_1 - \mu_3 \in [`r lower_bound`, `r upper_bound`]$ **?? do we have to use the different t-tests and pick the lowest one?**
 <br> $\mu_1$ is between $`r lower_bound`$ and $`r upper_bound`$ more than $\mu_3$. Since all values in the confidence interval is positive, we believe that the two means are different.
 c. ??
 d. ??
 
 # 4
+a. ??
+```{r}
+
+# 4-b
+n_i <- c(12, 12, 12)
+mu_i <- c(27.75, 21.42, 21.50)
+mu_T <- 23.56
+a <- 3
+MSE <- 2.5243 # from HW2
+
+phi <- round(1 / sqrt(MSE) * sqrt(sum(n_i * (mu_i - mu_T) ** 2) / a), 4)
+```
+b. $\phi = `r phi`$
+c. Using $\phi = `r phi`$, $d.f.\{SSA\} = 2$, and $d.f.\{SSE\} = 33$ from HW2, we use the table to find that the power is $1.00$.
+d. ??
+
+# 5
+a. We are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
+    i. $Y_{ij}$ were randomly sampled (independent)
+    ii. The $i$ groups are independent for all $i = 1, ..., a$
+    iii. Errors are independent and $\epsilon_{ij} \sim N(0, \sigma_\epsilon^2)$
+b. ??
+c. ??
+d. ??
+
+# 6
+
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
