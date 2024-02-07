@@ -1,0 +1,96 @@
+```{r echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# 1
+```{r}
+
+# 1-a
+mu_T <- 32
+mu_i <- c(38, 32, 24)
+n_i <- c(8, 10, 6)
+a <- 3
+MSE <- 19.8424 # From HW2
+
+phi <- round(1 / sqrt(MSE) * sqrt(sum(n_i * (mu_i - mu_T) ** 2) / a), 4)
+```
+a. $\phi =$ `r phi`
+b. Using $\phi = `r phi`$, $d.f.\{SSA\} = 2$, and $d.f.\{SSE\} = 21$ from HW2, we use the table to find that the power is $0.99$.
+```{r}
+
+# 1-c
+mu_min <- min(mu_i)
+mu_max <- max(mu_i)
+effect_size <- round((mu_max - mu_min) / sqrt(MSE), 4)
+```
+c. $\frac{\hat{\Delta}}{\sigma_\epsilon} = `r effect_size`$
+d. Using the table, we find that the minimum sample size for each group is $4$.
+
+# 2
+a. We are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
+    i. $Y_{ij}$ were randomly sampled (independent)
+    ii. The $i$ groups are independent for all $i = 1, ..., a$
+    iii. Errors are independent and $\epsilon_{ij} \sim N(0, \sigma_\epsilon^2)$
+```{r}
+
+# 2-b
+Y_bar_bar <- sum(mu_i) / a
+gamma_i <- round(mu_i - Y_bar_bar, 4)
+```
+b. $\gamma_1 = `r gamma_i[1]`, \gamma_2 = `r gamma_i[2]`, \gamma_3 = `r gamma_i[3]`$ 
+c. $\gamma_2$ is the factor effect, or how the overall mean is effected by a subject being in group $2$.
+```{r}
+
+# 2-d
+gamma_T <- round(sum(gamma_i), 4)
+```
+d. $\sum \gamma_i = `r gamma_T`$
+```{r}
+
+# 2-e
+sd_Y_i <- c(5.48, 3.46, 4.43)
+var_Y_i <- sd_Y_i ** 2
+var_Y_bar_bar <- round(sum(var_Y_i / n_i) / a ** 2, 4)
+```
+e. If the ANOVA model holds, the distribution of $\hat{\gamma}_k$ is normal where $\hat{\gamma}_k \sim N(\gamma_k, \sigma^2[\hat{\gamma}_k])$.
+<br> $\sigma^2[\hat{\gamma}_k] = \sigma^2[\bar{Y}_{k.} - \bar{\bar{Y}}]$
+<br> $\to \sigma^2[\bar{Y}_{k.}] + \sigma^2[\bar{\bar{Y}}]$
+<br> $\to \sigma^2[\bar{Y}_{k.}] + \sigma^2[\frac{\sum{\bar{Y}_{i.}}}{a}]$
+<br> $\to \sigma^2[\bar{Y}_{k.}] + \sigma^2[\frac{\sum{\bar{Y}_{i.}}}{`r a`}]$
+<br> $\to \sigma^2[\bar{Y}_{k.}] + \frac{\sum{\sigma^2[\bar{Y}_{i.}]}}{`r a ** 2`}$
+<br> $\to \frac{\sigma^2[Y_k]}{n_k} + \frac{1}{`r a ** 2`} \sum{\frac{\sigma^2[Y_i]}{n_i}}$
+<br> $\to \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`$
+<br> $\therefore \hat{\gamma}_k \sim N(\gamma_k, \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`)$
+
+# 3
+```{r}
+
+# 3-a
+# ??
+```
+a. Todo: ??
+```{r}
+
+# 3-b
+alpha <- 0.01
+n_T <- sum(n_i)
+critical_t <- qt(1 - alpha, n_T - a)
+lower_bound <- round(
+  mu_i[1] - mu_i[3] - critical_t * sqrt(MSE * (1 / n_i[1] + 1 / n_i[3])),
+  4
+)
+upper_bound <- round(
+  mu_i[1] - mu_i[3] + critical_t * sqrt(MSE * (1 / n_i[1] + 1 / n_i[3])),
+  4
+)
+```
+b. $\mu_1 - \mu_3 \in [`r lower_bound`, `r upper_bound`]$
+<br> $\mu_1$ is between $`r lower_bound`$ and $`r upper_bound`$ more than $\mu_3$. Since all values in the confidence interval is positive, we believe that the two means are different.
+c. ??
+d. ??
+
+# 4
+
+# Appendix
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
