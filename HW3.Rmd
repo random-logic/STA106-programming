@@ -27,7 +27,7 @@ c. $\frac{\hat{\Delta}}{\sigma_\epsilon} = `r effect_size`$
 d. Using the table, we find that the minimum sample size for each group is $4$.
 
 # 2
-a. We are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
+a. For all $Y_{ij} = \mu_i + \epsilon_{ij}$, we are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
     i. $Y_{ij}$ were randomly sampled (independent)
     ii. The $i$ groups are independent for all $i = 1, ..., a$
     iii. Errors are independent and $\epsilon_{ij} \sim N(0, \sigma_\epsilon^2)$
@@ -35,14 +35,14 @@ a. We are interested to know the factor effect ($\gamma_i$) and confidence inter
 
 # 2-b
 Y_bar_bar <- sum(mu_i) / a
-gamma_i <- round(mu_i - Y_bar_bar, 4)
+gamma_i <- mu_i - Y_bar_bar
 ```
 b. $\gamma_1 = `r gamma_i[1]`, \gamma_2 = `r gamma_i[2]`, \gamma_3 = `r gamma_i[3]`$ 
 c. $\gamma_2$ is the factor effect, or how the overall mean is effected by a subject being in group $2$.
 ```{r}
 
 # 2-d
-gamma_T <- round(sum(gamma_i), 4)
+gamma_T <- round(sum(gamma_i))
 ```
 d. $\sum \gamma_i = `r gamma_T`$
 ```{r}
@@ -60,15 +60,20 @@ e. If the ANOVA model holds, the distribution of $\hat{\gamma}_k$ is normal wher
 <br> $\to \sigma^2[\bar{Y}_{k.}] + \frac{\sum{\sigma^2[\bar{Y}_{i.}]}}{`r a ** 2`}$
 <br> $\to \frac{\sigma^2[Y_k]}{n_k} + \frac{1}{`r a ** 2`} \sum{\frac{\sigma^2[Y_i]}{n_i}}$
 <br> $\to \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`$
-<br> $\therefore \hat{\gamma}_k \sim N(\gamma_k, \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`)$
+<br> $\therefore \hat{\gamma}_k \sim N(\gamma_k, \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`)$ ??
 
 # 3
 ```{r}
 
 # 3-a
-# ??
+alpha <- 0.05
+n_T <- 24
+a <- 3
+t_critical <- qt(1 - alpha / 2, n_T - a)
+lower <- round(mu_i[1] - t_critical * sqrt(MSE * (1 / n_i[1])), 4)
+upper <- round(mu_i[1] + t_critical * sqrt(MSE * (1 / n_i[1])), 4)
 ```
-a. Todo: ??
+a. The $95%$ confidence interval for $\mu_1$ is $[`r lower`, `r upper`]$. This means that we are 95% sure that the true value of $\mu_1 \in [`r lower`, `r upper`]$.
 ```{r}
 
 # 3-b
@@ -91,7 +96,7 @@ c. ??
 d. ??
 
 # 4
-a. ??
+a. The power is the probability that we correctly reject the null hypothesis where age does affect the cash offer.
 ```{r}
 
 # 4-b
@@ -105,15 +110,21 @@ phi <- round(1 / sqrt(MSE) * sqrt(sum(n_i * (mu_i - mu_T) ** 2) / a), 4)
 ```
 b. $\phi = `r phi`$
 c. Using $\phi = `r phi`$, $d.f.\{SSA\} = 2$, and $d.f.\{SSE\} = 33$ from HW2, we use the table to find that the power is $1.00$.
-d. ??
+d. The power is super high because our factor effect is high relative to the error (i.e. $SSA$ is a lot higher than $MSE$).
 
 # 5
-a. We are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
+a. For all $Y_{ij} = \mu_i + \epsilon_{ij}$, we are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
     i. $Y_{ij}$ were randomly sampled (independent)
     ii. The $i$ groups are independent for all $i = 1, ..., a$
     iii. Errors are independent and $\epsilon_{ij} \sim N(0, \sigma_\epsilon^2)$
-b. ??
-c. ??
+```{r}
+M <- 1
+Y <- 3
+mu_diff <- mu_i[M] - mu_i[Y]
+```
+b. $\mu_M - \mu_Y = `r mu_diff`$
+c. $\sigma^2[\bar{M} - \bar{Y}]$
+<br> $\to \sigma^2[\bar{M}] + \sigma^2[\bar{Y}]$ ??
 d. ??
 
 # 6
