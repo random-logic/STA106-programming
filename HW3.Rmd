@@ -35,7 +35,7 @@ a. For all $Y_{ij} = \mu_i + \epsilon_{ij}$, we are interested to know the facto
 
 # 2-b
 Y_bar_bar <- sum(mu_i) / a
-gamma_i <- mu_i - Y_bar_bar
+gamma_i <- round(mu_i - Y_bar_bar, 4)
 ```
 b. $\gamma_1 = `r gamma_i[1]`, \gamma_2 = `r gamma_i[2]`, \gamma_3 = `r gamma_i[3]`$ 
 c. $\gamma_2$ is the factor effect, or how the overall mean is effected by a subject being in group $2$.
@@ -78,9 +78,8 @@ a. The $95%$ confidence interval for $\mu_1$ is $[`r lower`, `r upper`]$. This m
 
 # 3-b
 alpha <- 0.01
-g <- 2
 n_T <- sum(n_i)
-critical_t <- qt(1 - alpha / (2 * g), n_T - a) # Bonferroni correction
+critical_t <- qt(1 - alpha / 2, n_T - a)
 lower_bound <- round(
   mu_i[1] - mu_i[3] - critical_t * sqrt(MSE * (1 / n_i[1] + 1 / n_i[3])),
   4
@@ -90,10 +89,10 @@ upper_bound <- round(
   4
 )
 ```
-b. $\mu_1 - \mu_3 \in [`r lower_bound`, `r upper_bound`]$ **?? do we have to use the different t-tests and pick the lowest one?**
+b. $\mu_1 - \mu_3 \in [`r lower_bound`, `r upper_bound`]$
 <br> $\mu_1$ is between $`r lower_bound`$ and $`r upper_bound`$ more than $\mu_3$. Since all values in the confidence interval is positive, we believe that the two means are different.
-c. ??
-d. ??
+c. Yes, my confidence interval agrees with that statement. We expect the recovery time for "Below Average" patient to be at least $`r lower`$ days, which is greater than $30$ days.
+d. The largest difference we expect an above average patient to have compared to a below average in average recovery time is $`r upper_bound`$ as it is our upper bound of our confidence interval for the difference between the two means. 
 
 # 4
 a. The power is the probability that we correctly reject the null hypothesis where age does affect the cash offer.
@@ -118,17 +117,104 @@ a. For all $Y_{ij} = \mu_i + \epsilon_{ij}$, we are interested to know the facto
     ii. The $i$ groups are independent for all $i = 1, ..., a$
     iii. Errors are independent and $\epsilon_{ij} \sim N(0, \sigma_\epsilon^2)$
 ```{r}
+
+# 5-a
 M <- 1
 Y <- 3
+O <- 2
 mu_diff <- mu_i[M] - mu_i[Y]
 ```
 b. $\mu_M - \mu_Y = `r mu_diff`$
 c. $\sigma^2[\bar{M} - \bar{Y}]$
 <br> $\to \sigma^2[\bar{M}] + \sigma^2[\bar{Y}]$ ??
-d. ??
+```{r}
+
+# 5-d
+sd <- round(sqrt(MSE), 4)
+sd_above_mean <- round(2.5 / sqrt(MSE), 4)
+```
+d. $\epsilon_{ij} \sim N(0, \sqrt{MSE})$
+<br> $\to \epsilon_{ij} \sim N(0, `r sd`)$
+<br> This means that $2.5$ is $`r sd_above_mean`$ standard deviations above the mean. Using the z-table, $p \in [0.0571, 0.0582]$.
 
 # 6
+```{r}
 
+# 6-a
+n_T <- sum(n_i)
+alpha <- 0.05
+CI_mid <- mu_i[M] - (mu_i[Y] + mu_i[O]) / 2
+t_critical <- qt(1 - alpha / 2, n_T - a)
+lower <- round(
+  CI_mid - t_critical * sqrt(
+    MSE * (1 / n_i[M] + 1 / 2 ** 2 * 1 / n_i[Y] + 1 / 2 ** 2 * 1 / n_i[O])
+  ),
+  4
+)
+upper <- round(
+  CI_mid + t_critical * sqrt(
+    MSE * (1 / n_i[M] + 1 / 2 ** 2 * 1 / n_i[Y] + 1 / 2 ** 2 * 1 / n_i[O])
+  ),
+  4
+)
+```
+a. The $95%$ confidence interval for $\mu_M - \frac{\mu_Y + \mu_O}{2}$ is $[`r lower`, `r upper`]$.
+b. We are $95%$ confident that $\mu_M - \frac{\mu_Y + \mu_O}{2} \in [`r lower`, `r upper`]$.
+```{r}
+
+# 6-c
+CI_mid <- mu_i[O] - mu_i[Y]
+lower <- round(
+  CI_mid - t_critical * sqrt(
+    MSE * (1 / n_i[O] + 1 / n_i[Y])
+  ),
+  4
+)
+upper <- round(
+  CI_mid + t_critical * sqrt(
+    MSE * (1 / n_i[O] + 1 / n_i[Y])
+  ),
+  4
+)
+```
+c. The $95%$ confidence interval for $\mu_O - \mu_Y$ is $[`r lower`, `r upper`]$.
+d. We are $95%$ confident that $\mu_O - \mu_Y \in [`r lower`, `r upper`]$.
+e. I believe the means from 6A are significantly different because the confidence interval does not contain zero. The means from 6C are not significantly different because the confidence interval does not contain 0.
+
+## 7
+```{r}
+
+# 7-a
+mu_i <- c(13, 13, 18, 18)
+n_i <- 6
+a <- 4
+sd_err <- 3.5
+
+n_T <- n_i * a
+mu_T <- sum(mu_i * n_i) / n_T
+df_num <- a - 1
+df_den <- n_T - a
+
+phi <- round(1 / sd_err * sqrt(sum(n_i * (mu_i - mu_T) ** 2) / a), 4)
+```
+a. $\phi = `r phi`, d.f.[num] = `r df_num`, d.f.[den] = `r df_den`, \alpha = 0.05$.
+<br> Using the F-table, our power is $0.62$.
+b. $\phi = `r phi`, d.f.[num] = `r df_num`, d.f.[den] = `r df_den`, \alpha = 0.01$.
+<br> Using the F-table, our power is $0.34$.
+c. As we decrease $\alpha$, the power goes down.
+```{r}
+
+# 7-d
+delta_over_sd_err <- round((max(mu_i) - min(mu_i)) / sd_err, 4)
+```
+d. $\frac{\Delta}{\sigma_\epsilon} = `r delta_over_sd_err`, a = `r a`, \alpha = 0.05, 1 - \beta = 0.80$.
+<br> Using the sample size table, we find that $n_i = 11$ is our minimum sample size for all groups.
+e. $\frac{\Delta}{\sigma_\epsilon} = `r delta_over_sd_err`, a = `r a`, \alpha = 0.05, 1 - \beta = 0.90$.
+<br> Using the sample size table, we find that $n_i = 14$ is our minimum sample size for all groups.
+f. As we aim for a higher power, we need a larger sample size for each group.
+
+## 8
+??
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
