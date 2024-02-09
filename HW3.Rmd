@@ -1,3 +1,8 @@
+---
+title: "HW 3"
+author: "Andrew Jowe"
+---
+
 ```{r echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
@@ -181,7 +186,7 @@ c. The $95%$ confidence interval for $\mu_O - \mu_Y$ is $[`r lower`, `r upper`]$
 d. We are $95%$ confident that $\mu_O - \mu_Y \in [`r lower`, `r upper`]$.
 e. I believe the means from 6A are significantly different because the confidence interval does not contain zero. The means from 6C are not significantly different because the confidence interval does not contain 0.
 
-## 7
+# 7
 ```{r}
 
 # 7-a
@@ -213,8 +218,13 @@ e. $\frac{\Delta}{\sigma_\epsilon} = `r delta_over_sd_err`, a = `r a`, \alpha = 
 <br> Using the sample size table, we find that $n_i = 14$ is our minimum sample size for all groups.
 f. As we aim for a higher power, we need a larger sample size for each group.
 
-## 8
-??
+# 8
+a. False, as $\alpha$ increases, the power increases. ??
+b. True, because the confidence interval does not contain 0, which means that we are $(1 - \alpha)100%$ certain that the means are not equal.
+c. True, we can see that on the F-table. ??
+d. True, by definition of a $(1 - \alpha)100%$ confidence interval for $\mu_i$, we are $(1 - \alpha)100%$ confident that $\mu_i$ is in the confidence interval.
+
+# I
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
