@@ -225,6 +225,99 @@ c. True, we can see that on the F-table. ??
 d. True, by definition of a $(1 - \alpha)100%$ confidence interval for $\mu_i$, we are $(1 - \alpha)100%$ confident that $\mu_i$ is in the confidence interval.
 
 # I
+```{r}
+
+# I-a
+cancer <- read.csv("cancer.csv")
+library(pwr)
+
+give.me.power = function(ybar,ni,MSE,alpha){
+  a = length(ybar) # Finds a
+  nt = sum(ni) #Finds the overall sample size
+  overall.mean = sum(ni*ybar)/nt # Finds the overall mean
+  phi = (1/sqrt(MSE))*sqrt( sum(ni*(ybar - overall.mean)^2)/a) #Finds the books value of phi
+  phi.star = a *phi^2 #Finds the value of phi we will use for R
+  Fc = qf(1-alpha,a-1,nt-a) #The critical value of F, use in R’s function
+  power = 1 - pf(Fc, a-1, nt-a, phi.star)# The power, calculated using a non-central F
+  return(power)
+}
+
+group.means = by(cancer$Survival,cancer$Organ,mean)
+group.nis = by(cancer$Survival,cancer$Organ,length)
+the.model = lm(Survival ~ Organ, data = cancer)
+anova.table = anova(the.model)
+MSE = anova.table[2,3]
+alpha = 0.05
+the.power = give.me.power(group.means,group.nis,MSE,alpha)
+```
+a. The power is $`r round(the.power, 4)`$.
+```{r}
+
+# I-b
+overall.mean = sum(group.means*group.nis)/sum(group.nis)
+effect.size = sqrt(
+  sum( group.nis/sum(group.nis) *(group.means -overall.mean)^2 )/MSE
+)
+test = pwr.anova.test(k = 3, f = effect.size, sig.level = 0.05, power = 0.99)
+n = test$n
+```
+b. The smallest sample size we need for each group is $n_i = `r ceiling(n)`$.
+```{r}
+
+# I-c
+test = pwr.anova.test(k = 3, f = effect.size, sig.level = 0.01, power = 0.99)
+n = test$n
+```
+c. The smallest sample size we need for each group is $n_i = `r ceiling(n)`$.
+d. Yes, because the power of our test increases as our $\phi$ increases, which is positively correlated with our F-statistic due to $SSA$ being in the numerator and $MSE$ being in the denominator of $\phi$.
+
+# II
+```{r}
+
+# II-a
+give.me.CI = function(ybar,ni,ci,MSE,multiplier){
+  if (sum(ci) != 0 & sum(ci !=0 ) != 1){
+    return("Error - you did not input a valid contrast")
+  } else if (length(ci) != length(ni)){
+    return("Error - not enough contrasts given")
+  } else {
+    estimate = sum(ybar*ci)
+    SE = sqrt(MSE*sum(ci^2/ni))
+    CI = estimate + c(-1,1)*multiplier*SE
+    result = c(estimate,CI)
+    names(result) = c("Estimate","Lower Bound","Upper Bound")
+    return(result)
+  }
+}
+
+t.value = qt(1-0.05/2, sum(group.nis) - length(group.nis))
+# c(breast, bronchus, colon, ovary, stomach)
+ci = c(0, -1, 0, 0, 1)
+the.ci = give.me.CI(group.means,group.nis,ci,MSE,t.value)
+lower <- round(the.ci[["Lower Bound"]], 4)
+upper <- round(the.ci[["Upper Bound"]], 4)
+```
+a. The confidence interval is $[`r lower`, `r upper`]$.
+b. This interval does not suggest a significant difference between the two means because zero is in the interval.
+```{r}
+
+# II-c
+# c(breast, bronchus, colon, ovary, stomach)
+ci = c(0, -1/2, 1, 0, -1/2)
+the.ci = give.me.CI(group.means,group.nis,ci,MSE,t.value)
+lower <- round(the.ci[["Lower Bound"]], 4)
+upper <- round(the.ci[["Upper Bound"]], 4)
+```
+c. The confidence interval is $[`r lower`, `r upper`]$.
+d. The results do not suggest a significant difference between the average time of colon and the average time of both stomach and bronchus because zero is in the interval.
+
+# III
+```{r}
+
+# III-a
+green <- read.csv("Green.csv")
+
+```
 
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
