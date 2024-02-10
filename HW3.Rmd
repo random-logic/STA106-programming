@@ -74,7 +74,7 @@ e. If the ANOVA model holds, the distribution of $\hat{\gamma}_k$ is normal wher
 <br> $\to \sigma^2[\bar{Y}_{k.}] + \frac{\sum{\sigma^2[\bar{Y}_{i.}]}}{`r a ** 2`}$
 <br> $\to \frac{\sigma^2[Y_k]}{n_k} + \frac{1}{`r a ** 2`} \sum{\frac{\sigma^2[Y_i]}{n_i}}$
 <br> $\to \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`$
-<br> $\therefore \hat{\gamma}_k \sim N(\gamma_k, \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`)$ ??
+<br> $\therefore \hat{\gamma}_k \sim N(\gamma_k, \frac{\sigma^2[Y_k]}{n_k} + `r var_Y_bar_bar`)$
 
 # 3
 ```{r}
@@ -150,6 +150,8 @@ c. $\sigma^2[\bar{M} - \bar{Y}]$
 <br> $\to \sigma^2[\bar{M}] + \sigma^2[\bar{Y}]$
 <br> $\to `r sd_M`^2 + `r sd_Y`^2$
 <br> $\to `r sd_diff_M_Y`$
+<br> $\sigma = `r round(sqrt(sd_diff_M_Y), 4)`$
+
 ```{r}
 
 # 5-d
