@@ -19,7 +19,7 @@ MSE <- 19.8424 # From HW2
 
 phi <- round(1 / sqrt(MSE) * sqrt(sum(n_i * (mu_i - mu_T) ** 2) / a), 4)
 ```
-a. $\phi =$ `r phi`
+a. $\phi = `r phi`$
 b. Using $\phi = `r phi`$, $d.f.\{SSA\} = 2$, and $d.f.\{SSE\} = 21$ from HW2, we use the table to find that the power is $0.99$.
 ```{r}
 
@@ -32,7 +32,7 @@ c. $\frac{\hat{\Delta}}{\sigma_\epsilon} = `r effect_size`$
 d. Using the table, we find that the minimum sample size for each group is $4$.
 
 # 2
-a. For all $Y_{ij} = \mu_i + \epsilon_{ij}$, we are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
+a. For all $Y_{ij} = \mu_i + \gamma_i + \epsilon_{ij}$, we are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
     i. $Y_{ij}$ were randomly sampled (independent)
     ii. The $i$ groups are independent for all $i = 1, ..., a$
     iii. Errors are independent and $\epsilon_{ij} \sim N(0, \sigma_\epsilon^2)$
@@ -43,13 +43,22 @@ Y_bar_bar <- sum(mu_i) / a
 gamma_i <- round(mu_i - Y_bar_bar, 4)
 ```
 b. $\gamma_1 = `r gamma_i[1]`, \gamma_2 = `r gamma_i[2]`, \gamma_3 = `r gamma_i[3]`$ 
-c. $\gamma_2$ is the factor effect, or how the overall mean is effected by a subject being in group $2$.
+c. $\gamma_2 = 0$. Therefore the mean for group 2 is equal to the overall mean. $\gamma_2$ is the factor effect, or how the overall mean is effected by a subject being in group $2$.
 ```{r}
 
 # 2-d
 gamma_T <- round(sum(gamma_i))
 ```
 d. $\sum \gamma_i = `r gamma_T`$
+<br> Proof:
+<br> $\gamma_i = \bar{Y}_{i.} - \bar{\bar{Y}}$
+<br> $\sum{\gamma_i} = \sum(\bar{Y}_{i.} - \bar{\bar{Y}})$
+<br> $\to \sum(\bar{Y}_{i.} - \frac{1}{a}\sum{\bar{Y}_{i.}})$
+<br> $\to \sum\bar{Y}_{i.} - \sum\frac{1}{a}\sum{\bar{Y}_{i.}}$
+<br> $\to \sum\bar{Y}_{i.} - \frac{a}{a}\sum{\bar{Y}_{i.}}$
+<br> $\to \sum\bar{Y}_{i.} - \sum{\bar{Y}_{i.}}$
+<br> $\to 0$
+
 ```{r}
 
 # 2-e
@@ -117,7 +126,7 @@ c. Using $\phi = `r phi`$, $d.f.\{SSA\} = 2$, and $d.f.\{SSE\} = 33$ from HW2, w
 d. The power is super high because our factor effect is high relative to the error (i.e. $SSA$ is a lot higher than $MSE$).
 
 # 5
-a. For all $Y_{ij} = \mu_i + \epsilon_{ij}$, we are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
+a. For all $Y_{ij} = \mu_i + \gamma_i + \epsilon_{ij}$, we are interested to know the factor effect ($\gamma_i$) and confidence interval ($\mu_i - \mu_.$) of each group. The assumptions are:
     i. $Y_{ij}$ were randomly sampled (independent)
     ii. The $i$ groups are independent for all $i = 1, ..., a$
     iii. Errors are independent and $\epsilon_{ij} \sim N(0, \sigma_\epsilon^2)$
@@ -130,8 +139,17 @@ O <- 2
 mu_diff <- mu_i[M] - mu_i[Y]
 ```
 b. $\mu_M - \mu_Y = `r mu_diff`$
+```{r}
+
+# 5-c
+sd_M <- 1.29
+sd_Y <- 1.73
+sd_diff_M_Y <- sd_M ** 2 + sd_Y ** 2
+```
 c. $\sigma^2[\bar{M} - \bar{Y}]$
-<br> $\to \sigma^2[\bar{M}] + \sigma^2[\bar{Y}]$ ??
+<br> $\to \sigma^2[\bar{M}] + \sigma^2[\bar{Y}]$
+<br> $\to `r sd_M`^2 + `r sd_Y`^2$
+<br> $\to `r sd_diff_M_Y`$
 ```{r}
 
 # 5-d
@@ -202,9 +220,9 @@ df_den <- n_T - a
 
 phi <- round(1 / sd_err * sqrt(sum(n_i * (mu_i - mu_T) ** 2) / a), 4)
 ```
-a. $\phi = `r phi`, d.f.[num] = `r df_num`, d.f.[den] = `r df_den`, \alpha = 0.05$.
+a. $\phi = `r phi` \approx 1.5, d.f.[num] = `r df_num`, d.f.[den] = `r df_den`, \alpha = 0.05$.
 <br> Using the F-table, our power is $0.62$.
-b. $\phi = `r phi`, d.f.[num] = `r df_num`, d.f.[den] = `r df_den`, \alpha = 0.01$.
+b. $\phi = `r phi` \approx 1.5, d.f.[num] = `r df_num`, d.f.[den] = `r df_den`, \alpha = 0.01$.
 <br> Using the F-table, our power is $0.34$.
 c. As we decrease $\alpha$, the power goes down.
 ```{r}
@@ -212,10 +230,10 @@ c. As we decrease $\alpha$, the power goes down.
 # 7-d
 delta_over_sd_err <- round((max(mu_i) - min(mu_i)) / sd_err, 4)
 ```
-d. $\frac{\Delta}{\sigma_\epsilon} = `r delta_over_sd_err`, a = `r a`, \alpha = 0.05, 1 - \beta = 0.80$.
-<br> Using the sample size table, we find that $n_i = 11$ is our minimum sample size for all groups.
-e. $\frac{\Delta}{\sigma_\epsilon} = `r delta_over_sd_err`, a = `r a`, \alpha = 0.05, 1 - \beta = 0.90$.
-<br> Using the sample size table, we find that $n_i = 14$ is our minimum sample size for all groups.
+d. $\frac{\Delta}{\sigma_\epsilon} = `r delta_over_sd_err` \approx 1.25, a = `r a`, \alpha = 0.05, 1 - \beta = 0.80$.
+<br> Using the sample size table, we find that $n_i = 15$ is our minimum sample size for all groups.
+e. $\frac{\Delta}{\sigma_\epsilon} = `r delta_over_sd_err` \approx 1.25, a = `r a`, \alpha = 0.05, 1 - \beta = 0.90$.
+<br> Using the sample size table, we find that $n_i = 20$ is our minimum sample size for all groups.
 f. As we aim for a higher power, we need a larger sample size for each group.
 
 # 8
@@ -258,14 +276,14 @@ overall.mean = sum(group.means*group.nis)/sum(group.nis)
 effect.size = sqrt(
   sum( group.nis/sum(group.nis) *(group.means -overall.mean)^2 )/MSE
 )
-test = pwr.anova.test(k = 3, f = effect.size, sig.level = 0.05, power = 0.99)
+test = pwr.anova.test(k = 5, f = effect.size, sig.level = 0.05, power = 0.99)
 n = ceiling(test$n)
 ```
 b. The smallest sample size we need for each group is $n_i = `r n`$.
 ```{r}
 
 # I-c
-test = pwr.anova.test(k = 3, f = effect.size, sig.level = 0.01, power = 0.99)
+test = pwr.anova.test(k = 5, f = effect.size, sig.level = 0.01, power = 0.99)
 n = ceiling(test$n)
 ```
 c. The smallest sample size we need for each group is $n_i = `r n`$.
@@ -329,7 +347,7 @@ gammai = group.means - mean(group.means)
 ```
 b. $\gamma_1 = `r gammai[1]`, \gamma_2 = `r gammai[2]`, \gamma_3 = `r gammai[3]`$
 c. The power is the probability that we correctly reject the null hypothesis where treatment does affect the weight.
-d. $1-\alpha$ is the probability that we correctly accept the null hypothesis where treatment does not affect the weight.
+d. $1-\alpha$ is the probability that we correctly accept the null hypothesis where the null hypothesis is true (i.e. treatment does not affect the weight).
 
 # IV
 ```{r}
