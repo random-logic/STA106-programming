@@ -25,8 +25,8 @@ for (label in all_labels) {
 
   code <- knitr::knit_code$get(label)
 
-  cat("###", label, "\n")
-  cat("```\n")
+  cat("##", label, "\n")
+  cat("```r \n")
   cat(code, sep = "\n")
   cat("```\n")
 }
