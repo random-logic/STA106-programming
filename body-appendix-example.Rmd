@@ -1,20 +1,33 @@
-```{r label="noEcho", echo=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r}
-
-# 1
+```{r 1}
 x <- 1
 x
 ```
 
-```{r}
-
-# 2
+```{r 2}
 y <- 2
 y
 ```
 
-```{r ref.label=knitr::all_labels()[!grepl("noEcho", knitr::all_labels())], echo=TRUE, eval=FALSE}
+# Appendix
+```{r appendix, results="asis"}
+# Get all the labels
+all_labels <- knitr::all_labels()
+
+# Print out code along with labels
+for (label in all_labels) {
+  if (label == "setup" || label == "appendix") {
+    next
+  }
+
+  code <- knitr::knit_code$get(label)
+
+  cat("###", label, "\n")
+  cat("```\n")
+  cat(code, sep = "\n")
+  cat("```\n")
+}
 ```
