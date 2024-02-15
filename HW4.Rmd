@@ -1,0 +1,30 @@
+# 1
+a. The errors seem to be normally distributed because the dots on the QQ plot are close to the QQ line.
+b. There seems to be outliers because there are dots that are more than 5 errors away from the fitted mean on the errors vs means plot. ??
+c. It appears that the groups don't have equal variances because the vertical spread of the dots are not the same for all fitted means on the errors vs fitted means plot.
+d. I would not remove any observations because the sample size for each group is already pretty small. More data means that our estimates are more accurate.
+
+# 2
+a. Since the p-value is typically greater than $\alpha$ (at most $0.1$), we fail to reject the null hypothesis. Therefore, the data follows a normal distribution.
+b. Since the p-value is typically greater than $\alpha$ (at most $0.1$), we fail to reject the null hypothesis. Therefore, the variances of each group are approximately equal.
+c. I would not suggest transforming the data because our data already fits the ANOVA assumptions.
+d. Our confidence intervals and p-values are likely to be reliable because we know the ANOVA assumptions hold.
+
+# 3
+a. It appears that the ANOVA assumptions are not met, because the graphs suggest that the data may not have equal variances between groups, and we cannot say for sure if the data follows a normal distribution. The Errors vs Group Means graph has different spreads for all group means, suggesting non-equal variances. The dots on the normal QQ plot do not follow the QQ line for the points beyond the $\pm 1$ theoretical quantiles, suggesting that the data may not be normally distributed. However, the histogram of errors show that the data is approximately normal. In the best case scenario, we need to remove outliers so that the data follows a normal distribution.
+b. The null hypothesis for the Shapiro-Wilks test is that the data follows a normal distribution. The alternative hypothesis is that the data does not follow a normal distribution.
+c. The null hypothesis for the Brown-Forstyhe test is that the groups all have equal variances. The alternative hypothesis is that the groups do not all have equal variances (at least one of the variances are not equal).
+d. No, because we are not sure if the ANOVA assumptions hold.
+
+# 4
+a. We have a 0.0734 chance of a type I error, where we reject the null hypothesis when the null hypothesis is true. In other words, this is the chance of stating that the data is not normal when it actually is.
+b. We have a 0.0000304 chance of a type I error, where we reject the null hypothesis when the null hypothesis is true. In other words, this is the chance of stating that at least one of the variances are not equal when all groups actually have equal variances.
+c. We would suggest transforming the variables because we conclude the variances are not equal between all groups as we will probably reject the null hypothesis of the Brown Forsythe test using typical $\alpha$ values.
+d. One downside is that it can make the interpretation of the data more complex. When we interpret, now we have to account for the function we used to transform the data.
+
+# 5
+a. Yes, because the dots on the QQ plot are a lot closer to the line compared to before.
+b. No, although the p-value for the Shapiro Wilks test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Brown Forsythe test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the groups do not all have equal variances, violating our ANOVA assumptions.
+c. Yes, it appears that the groups have constant variances as the spreads for the different group means are around the same on the Errors vs Group Means chart.
+d. No, although the p-value for the Brown Forsythe test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Shapiro Wilks test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the data is not normally distributed, violating our ANOVA assumptions.
+e. None of the datasets are suitable because all of them violate ANOVA assumptions.
