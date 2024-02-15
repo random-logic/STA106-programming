@@ -1,3 +1,7 @@
+```{r echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
 # 1
 a. The errors seem to be normally distributed because the dots on the QQ plot are close to the QQ line.
 b. There seems to be outliers because there are dots that are more than 5 errors away from the fitted mean on the errors vs means plot. ??
@@ -28,3 +32,7 @@ b. No, although the p-value for the Shapiro Wilks test is a lot higher than befo
 c. Yes, it appears that the groups have constant variances as the spreads for the different group means are around the same on the Errors vs Group Means chart.
 d. No, although the p-value for the Brown Forsythe test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Shapiro Wilks test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the data is not normally distributed, violating our ANOVA assumptions.
 e. None of the datasets are suitable because all of them violate ANOVA assumptions.
+
+# Appendix
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
