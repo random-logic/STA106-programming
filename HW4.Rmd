@@ -33,6 +33,14 @@ c. Yes, it appears that the groups have constant variances as the spreads for th
 d. No, although the p-value for the Brown Forsythe test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Shapiro Wilks test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the data is not normally distributed, violating our ANOVA assumptions.
 e. None of the datasets are suitable because all of them violate ANOVA assumptions.
 
+# 6 ?? Todo
+a. $Y_{ij} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ij}$
+<br> The assumptions are:
+    i. ??  
+b. $Y_{ij} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ij}$
+<br> The assumptions are:
+    i. ??
+
 # Appendix
 ```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
 ```
