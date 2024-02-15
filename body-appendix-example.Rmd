@@ -1,4 +1,4 @@
-```{r echo=FALSE}
+```{r label="noEcho", echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -16,5 +16,5 @@ y <- 2
 y
 ```
 
-```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```{r ref.label=knitr::all_labels()[!grepl("noEcho", knitr::all_labels())], echo=TRUE, eval=FALSE}
 ```

@@ -1,4 +1,9 @@
-```{r echo=FALSE}
+---
+title: "HW 4"
+author: "Andrew Jowe"
+---
+
+```{r label="noEcho", echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -42,5 +47,5 @@ b. $Y_{ij} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ij
     i. ??
 
 # Appendix
-```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```{r ref.label=knitr::all_labels()[!grepl("noEcho", knitr::all_labels())], echo=TRUE, eval=FALSE}
 ```
