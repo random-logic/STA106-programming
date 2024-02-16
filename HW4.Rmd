@@ -3,7 +3,7 @@ title: "HW 4"
 author: "Andrew Jowe"
 ---
 
-```{r label="noEcho", echo=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -38,14 +38,170 @@ c. Yes, it appears that the groups have constant variances as the spreads for th
 d. No, although the p-value for the Brown Forsythe test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Shapiro Wilks test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the data is not normally distributed, violating our ANOVA assumptions.
 e. None of the datasets are suitable because all of them violate ANOVA assumptions.
 
-# 6 ?? Todo
-a. $Y_{ij} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ij}$
+# 6
+a. $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
+<br> The assumptions and constraints are:
+    i. The ANOVA assumptions hold, that is:
+        - All $Y_{ijk}$ were randomly sampled
+        - The $i$ groups are independent of each other
+        - The $j$ groups are independent of each other
+        - $\epsilon_{ijk} \sim N(0, \sigma_\epsilon^2)$
+    ii. Observations should be independent between groups as a constraint since there is no factor effect between groups in our model.
+b. $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$
 <br> The assumptions are:
-    i. ??  
-b. $Y_{ij} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ij}$
-<br> The assumptions are:
-    i. ??
+    i. The ANOVA assumptions hold, that is:
+        - All $Y_{ijk}$ were randomly sampled
+        - The $i$ groups are independent of each other
+        - The $j$ groups are independent of each other
+        - $\epsilon_{ijk} \sim N(0, \sigma_\epsilon^2)$
+    ii. Observations can be dependent between groups since there is a factor effect between groups in our model.
+c. There seems to be a significant effect of smoking cigarettes on sleep, because there is a change in sleep when we change this factor. The average sleep in hours for those who smoke is $5.90$ compared to $7.04$ for those who don't smoke.
+d. There seems to be a significant effect of smoking marijuana on sleep, because there is a change in sleep when we change this factor. The average sleep in hours for those who smoke is $6.71$ compared to $7.073$ for those who don't.
+e. There seems to be an interaction effect between smoking cigarettes and smoking marijuana on sleep. For those who don't smoke cigarettes, smoking marijuana decreases the average sleep by $0.18$ hours. However, for those who do smoke cigarettes, smoking marijuana increases the average sleep by $0.97$.
+
+# 7
+a. We need two values of $\gamma_i$ to estimate since there are two possibilities for smoking cigarettes.
+b. We need two values of $\delta_j$ to estimate since there are two possibilities for smoking marijuana.
+c. We need four values of $(\gamma\delta)_{ij}$ to estimate since there are two possibilities for smoking cigarettes multiplied by two possibilities for smoking marijuana.
+d. In total, we have $(a - 1) + (b - 1) + 1$ parameters to estimate. In our model $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$, we have 1 parameter to estimate for $\mu_{..}$, $a - 1$ parameters to estimate for $\gamma_i$, and $b - 1$ parameters to estimate for $\delta_j$.
+e. In total, we have $(a - 1) + (b - 1) + (a - 1)(b - 1) + 1$ parameters to estimate. In our model $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$, we have 1 parameter to estimate for $\mu_{..}$, $a - 1$ parameters to estimate for $\gamma_i$, $(a - 1)(b - 1)$ parameters to estimate for $(\gamma\delta)_{ij}$, and $b - 1$ parameters to estimate for $\delta_j$. If we simplify our result:
+<br> $(a - 1) + (b - 1) + (a - 1)(b - 1) + 1$
+<br> $\to a - 1 + b - 1 + a * b - a - b + 1 + 1$
+<br> $\to a + b + a * b - a - b$
+<br> $\to a * b$
+<br> $\therefore$ We have $a * b$ total parameters.
+
+# 8
+a. False. Our null hypothesis for this test is that the data is normal. A smaller p-value makes it less likely for us to accept the null hypothesis, making it more likely that the data is not normally distributed.
+b. False. It is possible for the normality assumption to hold, but $i$ groups have difference variances.
+c. True. This matches our answer in 7d.
+d. False. This does not match our answer in 7e.
+
+# I
+```{r I, include=FALSE}
+library(car)
+cancer <- read.csv("Cancer.csv")
+cancer_model <- lm(Survival ~ Organ, data = cancer)
+```
+a. In the Normal Q-Q plot, the dots beyond $\pm 1$ theoretical quantiles do not conform to the normal line. The graph suggests that the data is not normally distributed, violating our ANOVA assumptions.
+```{r I-a}
+qqnorm(cancer_model$residuals)
+qqline(cancer_model$residuals)
+```
+b. <br>
+```{r I-b}
+alpha <- 0.01
+
+cancer$ei <- cancer_model$residuals
+nt <- nrow(cancer)
+a <- length(unique(cancer_model$Organ))
+r_ij <- rstandard(cancer_model)
+
+t_cutoff <- qt(1 - alpha / (2 * nt), nt - a)
+cancer$is_outlier <- abs(r_ij) > t_cutoff
+num_outliers_removed <- sum(cancer$is_outlier == TRUE)
+
+cancer_new <- cancer[!cancer$is_outlier, ]
+cancer_model_new <- lm(Survival ~ Organ, data = cancer)
+
+qqnorm(cancer_model_new$residuals)
+qqline(cancer_model_new$residuals)
+```
+```{r I-c}
+ei <- cancer_model_new$residuals
+sw_test <- shapiro.test(ei)
+```
+c. $p = `r round(sw_test$p.value, 4)`$
+```{r I-d, include=FALSE}
+the_bf_test <- leveneTest(ei ~ Organ, data = cancer_new, center = median)
+the_p_value <- the_bf_test[[3]][1]
+```
+d. $p = `r round(the_p_value, 4)`$
+```{r I-e}
+portion_of_data_removed <- num_outliers_removed / nt
+```
+e. $`r round(portion_of_data_removed * 100, 2)`\%$ of the data was removed.
+
+# II
+```{r II, include=FALSE}
+library("EnvStats")
+
+do_diagnostic <- function(y, x, data) {
+  model <- lm(y ~ x, data = data)
+  ei <- model$residuals
+  sw_test <- shapiro.test(ei)
+  sw_test_p <- sw_test$p.value
+  the_bf_test <- leveneTest(ei ~ x, data = data, center = median)
+  the_p_value <- the_bf_test[[3]][1]
+  return(c(sw_test_p, the_p_value))
+}
+```
+
+```{r II-a}
+lambda_1 <- boxcox(
+  cancer_model,
+  objective.name = "PPCC",
+  optimize = TRUE
+)$lambda
+lambda_2 <- boxcox(
+  cancer_model,
+  objective.name = "Shapiro-Wilk",
+  optimize = TRUE
+)$lambda
+lambda_3 <- boxcox(
+  cancer$Survival,
+  objective.name = "Log-Likelihood",
+  optimize = TRUE
+)$lambda
+
+yt_l1 <- (cancer$Survival ** lambda_1 - 1) / lambda_1
+t_cancer_l1 <- data.frame(Survival = yt_l1, Organ = cancer$Organ)
+t_cancer_l1_res <- do_diagnostic(
+  t_cancer_l1$Survival,
+  t_cancer_l1$Organ,
+  t_cancer_l1
+)
+sw_test_l1 <- t_cancer_l1_res[1]
+bf_test_l1 <- t_cancer_l1_res[2]
+
+yt_l2 <- (cancer$Survival ** lambda_1 - 1) / lambda_1
+t_cancer_l2 <- data.frame(Survival = yt_l2, Organ = cancer$Organ)
+t_cancer_l2_res <- do_diagnostic(
+  t_cancer_l2$Survival,
+  t_cancer_l2$Organ,
+  t_cancer_l2
+)
+sw_test_l2 <- t_cancer_l2_res[1]
+bf_test_l2 <- t_cancer_l2_res[2]
+
+yt_l3 <- (cancer$Survival ** lambda_1 - 1) / lambda_1
+t_cancer_l3 <- data.frame(Survival = yt_l3, Organ = cancer$Organ)
+t_cancer_l3_res <- do_diagnostic(
+  t_cancer_l3$Survival,
+  t_cancer_l3$Organ,
+  t_cancer_l3
+)
+sw_test_l3 <- t_cancer_l3_res[1]
+bf_test_l3 <- t_cancer_l3_res[2]
+```
+a. 
 
 # Appendix
-```{r ref.label=knitr::all_labels()[!grepl("noEcho", knitr::all_labels())], echo=TRUE, eval=FALSE}
+```{r appendix, include=TRUE, echo=FALSE, results="asis"}
+# Get all the labels
+all_labels <- knitr::all_labels()
+
+# Print out code along with labels
+for (label in all_labels) {
+  if (label == "setup" || label == "appendix") {
+    next
+  }
+
+  code <- knitr::knit_code$get(label)
+
+  cat("##", label, "\n")
+  cat("```r \n")
+  cat(code, sep = "\n")
+  cat("```\n")
+}
 ```
