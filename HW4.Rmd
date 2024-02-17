@@ -126,7 +126,8 @@ plot(the.model$fitted.values, the.model$residuals,
      xlab = "Group Means", ylab = "Errors")
 abline(h = 0, col = "purple")
 ```
-b. <br>
+b. Here are the new plots:
+
 ```{r I-b}
 the.model <- lm(Survival ~ Organ, data = cancer)
 cancer$ei = the.model$residuals
