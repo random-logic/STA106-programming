@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # 1
 a. The errors seem to be normally distributed because the dots on the QQ plot are close to the QQ line.
-b. There seems to be outliers because there are dots that are more than 5 errors away from the fitted mean on the errors vs means plot. ??
+b. There seems to be outliers because there are dots that are more than 5 errors away from the fitted mean on the errors vs means plot.
 c. It appears that the groups don't have equal variances because the vertical spread of the dots are not the same for all fitted means on the errors vs fitted means plot.
 d. I would not remove any observations because the sample size for each group is already pretty small. More data means that our estimates are more accurate.
 
@@ -33,13 +33,14 @@ d. One downside is that it can make the interpretation of the data more complex.
 
 # 5
 a. Yes, because the dots on the QQ plot are a lot closer to the line compared to before.
-b. No, although the p-value for the Shapiro Wilks test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Brown Forsythe test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the groups do not all have equal variances, violating our ANOVA assumptions.
+b. It has improved, but still not good enough. Although the p-value for the Shapiro Wilks test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Brown Forsythe test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the groups do not all have equal variances, violating our ANOVA assumptions.
 c. Yes, it appears that the groups have constant variances as the spreads for the different group means are around the same on the Errors vs Group Means chart.
-d. No, although the p-value for the Brown Forsythe test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Shapiro Wilks test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the data is not normally distributed, violating our ANOVA assumptions.
+d. It has improved, but still not good enough. Although the p-value for the Brown Forsythe test is a lot higher than before, making it more likely that we would fail to reject the null hypothesis or accept that the data is normally distributed, the Shapiro Wilks test did not improve that much as it's p-value is still lower than 0.01. We will most likely still reject the null hypothesis for that test given typical $\alpha$ values, concluding that the data is not normally distributed, violating our ANOVA assumptions.
 e. None of the datasets are suitable because all of them violate ANOVA assumptions.
 
 # 6
 a. $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
+<br> With $\sum \gamma_i = 0, \sum \delta_j = 0$
 <br> The assumptions and constraints are:
     i. The ANOVA assumptions hold, that is:
         - All $Y_{ijk}$ were randomly sampled
@@ -48,6 +49,7 @@ a. $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
         - $\epsilon_{ijk} \sim N(0, \sigma_\epsilon^2)$
     ii. Observations should be independent between groups as a constraint since there is no factor effect between groups in our model.
 b. $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$
+<br> With $\sum \gamma_i = 0, \sum \delta_j = 0, \sum \sum (\gamma\delta)_{ij} = 0$
 <br> The assumptions are:
     i. The ANOVA assumptions hold, that is:
         - All $Y_{ijk}$ were randomly sampled
@@ -77,114 +79,207 @@ b. False. It is possible for the normality assumption to hold, but $i$ groups ha
 c. True. This matches our answer in 7d.
 d. False. This does not match our answer in 7e.
 
-# I
-```{r I, include=FALSE}
-library(car)
+```{r label="Setup R Code", include = FALSE}
+# Load data
 cancer <- read.csv("Cancer.csv")
-cancer_model <- lm(Survival ~ Organ, data = cancer)
-```
-a. In the Normal Q-Q plot, the dots beyond $\pm 1$ theoretical quantiles do not conform to the normal line. The graph suggests that the data is not normally distributed, violating our ANOVA assumptions.
-```{r I-a}
-qqnorm(cancer_model$residuals)
-qqline(cancer_model$residuals)
-```
-b. <br>
-```{r I-b}
-alpha <- 0.01
+trap <- read.csv("Trap.csv")
+rat <- read.csv("rat.csv")
 
-cancer$ei <- cancer_model$residuals
-nt <- nrow(cancer)
-a <- length(unique(cancer_model$Organ))
-r_ij <- rstandard(cancer_model)
-
-t_cutoff <- qt(1 - alpha / (2 * nt), nt - a)
-cancer$is_outlier <- abs(r_ij) > t_cutoff
-num_outliers_removed <- sum(cancer$is_outlier == TRUE)
-
-cancer_new <- cancer[!cancer$is_outlier, ]
-cancer_model_new <- lm(Survival ~ Organ, data = cancer)
-
-qqnorm(cancer_model_new$residuals)
-qqline(cancer_model_new$residuals)
+# Load libraries
+library(car)
+library(EnvStats)
 ```
-```{r I-c}
-ei <- cancer_model_new$residuals
-sw_test <- shapiro.test(ei)
-```
-c. $p = `r round(sw_test$p.value, 4)`$
-```{r I-d, include=FALSE}
-the_bf_test <- leveneTest(ei ~ Organ, data = cancer_new, center = median)
-the_p_value <- the_bf_test[[3]][1]
-```
-d. $p = `r round(the_p_value, 4)`$
-```{r I-e}
-portion_of_data_removed <- num_outliers_removed / nt
-```
-e. $`r round(portion_of_data_removed * 100, 2)`\%$ of the data was removed.
 
-# II
-```{r II, include=FALSE}
-library("EnvStats")
-
-do_diagnostic <- function(y, x, data) {
-  model <- lm(y ~ x, data = data)
-  ei <- model$residuals
-  sw_test <- shapiro.test(ei)
-  sw_test_p <- sw_test$p.value
-  the_bf_test <- leveneTest(ei ~ x, data = data, center = median)
-  the_p_value <- the_bf_test[[3]][1]
-  return(c(sw_test_p, the_p_value))
+```{r label="Find Means Function"}
+find.means <- function(the.data, fun.name = mean) {
+  a = length(unique(the.data[,2]))
+  b = length(unique(the.data[,3]))
+  means.A = by(the.data[,1], the.data[,2], fun.name)
+  means.B = by(the.data[,1],the.data[,3],fun.name)
+  means.AB = by(the.data[,1],list(the.data[,2],the.data[,3]),fun.name)
+  MAB = matrix(means.AB,nrow = b, ncol = a, byrow = TRUE)
+  colnames(MAB) = names(means.A)
+  rownames(MAB) = names(means.B)
+  MA = as.numeric(means.A)
+  names(MA) = names(means.A)
+  MB = as.numeric(means.B)
+  names(MB) = names(means.B)
+  results = list(A = MA, B = MB, AB = MAB)
+  return(results)
 }
 ```
 
-```{r II-a}
-lambda_1 <- boxcox(
-  cancer_model,
-  objective.name = "PPCC",
-  optimize = TRUE
-)$lambda
-lambda_2 <- boxcox(
-  cancer_model,
-  objective.name = "Shapiro-Wilk",
-  optimize = TRUE
-)$lambda
-lambda_3 <- boxcox(
-  cancer$Survival,
-  objective.name = "Log-Likelihood",
-  optimize = TRUE
-)$lambda
+# I
+a. In the Normal Q-Q plot, the dots beyond $\pm 1$ theoretical quantiles do not conform to the normal line. The graph suggests that the data is not normally distributed, violating our ANOVA assumptions.
+```{r I-a}
+# Do model
+the.model <- lm(Survival ~ Organ, data = cancer)
 
-yt_l1 <- (cancer$Survival ** lambda_1 - 1) / lambda_1
-t_cancer_l1 <- data.frame(Survival = yt_l1, Organ = cancer$Organ)
-t_cancer_l1_res <- do_diagnostic(
-  t_cancer_l1$Survival,
-  t_cancer_l1$Organ,
-  t_cancer_l1
-)
-sw_test_l1 <- t_cancer_l1_res[1]
-bf_test_l1 <- t_cancer_l1_res[2]
+# Normal Q-Q plot
+qqnorm(the.model$residuals)
+qqline(the.model$residuals)
 
-yt_l2 <- (cancer$Survival ** lambda_1 - 1) / lambda_1
-t_cancer_l2 <- data.frame(Survival = yt_l2, Organ = cancer$Organ)
-t_cancer_l2_res <- do_diagnostic(
-  t_cancer_l2$Survival,
-  t_cancer_l2$Organ,
-  t_cancer_l2
-)
-sw_test_l2 <- t_cancer_l2_res[1]
-bf_test_l2 <- t_cancer_l2_res[2]
-
-yt_l3 <- (cancer$Survival ** lambda_1 - 1) / lambda_1
-t_cancer_l3 <- data.frame(Survival = yt_l3, Organ = cancer$Organ)
-t_cancer_l3_res <- do_diagnostic(
-  t_cancer_l3$Survival,
-  t_cancer_l3$Organ,
-  t_cancer_l3
-)
-sw_test_l3 <- t_cancer_l3_res[1]
-bf_test_l3 <- t_cancer_l3_res[2]
+# Error vs. Group Means
+plot(the.model$fitted.values, the.model$residuals,
+     main = "Errors vs. Group Means",
+     xlab = "Group Means", ylab = "Errors")
+abline(h = 0, col = "purple")
 ```
-a. 
+b. <br>
+```{r I-b}
+the.model <- lm(Survival ~ Organ, data = cancer)
+cancer$ei = the.model$residuals
+
+nt = nrow(cancer) #Calculates the total sample size
+a = length(unique(cancer$Organ)) #Calculates the value of a
+SSE = sum(cancer$ei^2) #Sums and squares the errors (finds SSE)
+MSE = SSE/(nt-a) #Finds MSE
+eij.star = the.model$residuals/sqrt(MSE)
+
+alpha = 0.01
+
+# original code
+t.cutoff = qt(1 - alpha / (2 * nt), nt - a)
+
+# modified code
+t.cutoff = qt(1-alpha, nt-a)
+
+CO.eij = which(abs(eij.star) > t.cutoff)
+n_outliers <- length(CO.eij)
+
+outliers <- CO.eij
+
+new.data <- cancer[-CO.eij, ]
+new.model <- lm(Survival ~ Organ, data = new.data)
+
+# Normal Q-Q Plot
+qqnorm(new.model$residuals)
+qqline(new.model$residuals)
+
+# Error vs. Group Means
+plot(new.model$fitted.values, new.model$residuals,
+     main = "Errors vs. Group Means",
+     xlab = "Group Means", ylab = "Errors")
+abline(h = 0, col = "purple")
+```
+```{r I-c}
+ei = new.model$residuals
+the.SWtest = shapiro.test(ei)
+the.p.value <- the.SWtest$p.value
+```
+c. $p = `r round(the.p.value, 4)`$
+```{r I-d, include=FALSE}
+the.BFtest = leveneTest(ei~ Organ, data=new.data, center=median)
+the.p.value = the.BFtest[[3]][1]
+```
+d. $p = `r round(the.p.value, 4)`$
+```{r I-e}
+portion.of.data.removed <- n_outliers / nt
+```
+e. $`r round(portion.of.data.removed * 100, 2)`\%$ of the data was removed.
+
+# II
+```{r II-a}
+# Find best lambda
+L2 = boxcox(the.model, objective.name = "Shapiro-Wilk", optimize = TRUE)$lambda
+```
+a. $\lambda = `r round(L2, 4)`$
+b. It appears that the tranformations has helped. The dots on the Q-Q plot are close to the Q-Q line, suggesting that the data is normally distributed. On the Error vs. Means plot, the error spread for the different group means are around the same, suggesting that the variances are approximately the same.
+```{r II-b}
+YT = (cancer$Survival^(L2)-1)/L2
+t.data = data.frame(Survival = YT, Organ = cancer$Organ)
+t.model = lm(Survival ~ Organ,data = t.data)
+
+# Do model
+the.model <- lm(Survival ~ Organ, data = t.data)
+
+# Normal Q-Q plot
+qqnorm(the.model$residuals)
+qqline(the.model$residuals)
+
+# Error vs. Group Means
+plot(the.model$fitted.values, the.model$residuals,
+     main = "Errors vs. Group Means",
+     xlab = "Group Means", ylab = "Errors")
+abline(h = 0, col = "purple")
+```
+```{r II-c}
+ei = t.model$residuals
+the.SWtest = shapiro.test(ei)
+the.p.value <- the.SWtest$p.value
+```
+c. $p = `r round(the.p.value, 4)`$
+```{r II-d, include=FALSE}
+the.BFtest = leveneTest(ei~ Organ, data=t.data, center=median)
+the.p.value = the.BFtest[[3]][1]
+```
+d. $p = `r round(the.p.value, 4)`$
+```{r II-e}
+# Calculate p-value for transformed dataset
+transformed_model <- lm(Survival ~ Organ, data = t.data)
+transformed_anova <- anova(transformed_model)
+transformed_p_value <- transformed_anova$"Pr(>F)"[1]
+
+# Calculate p-value for original dataset
+original_model <- lm(Survival ~ Organ, data = cancer)
+original_anova <- anova(original_model)
+original_p_value <- original_anova$"Pr(>F)"[1]
+```
+e. The p-value for the original dataset is $`r format(round(original_p_value, 4), scientific = FALSE)`$, while the p-value for the transformed dataset is $`r format(round(transformed_p_value, 4), scientific = FALSE)`$. I believe the transformed dataset is more reliable because the original dataset violates the ANOVA assumptions, while the transformed dataset does not.
+
+# III
+a. There appears to be an interaction effect. When we move from lower to middle location, the change in number of average moths depends on the bait type. If the bait type is sugar, then we see an increase in average moths. If the bait type is chemical or scent, then we see a decrease in average moths. 
+```{r III-a}
+# Do interaction plot
+the.plot.name <- "Interaction Plot of Moth Counts by Location and Bait Type"
+interaction.plot(x.factor = trap$Location, trace.factor = trap$Bait,
+                 response = trap$Moth, legend = TRUE,
+                 xlab = "Location", ylab = "Number of Moths",
+                 trace.label = "Bait Type", main = the.plot.name)
+```
+```{r III-bcd}
+# Find means
+the.means = find.means(trap,mean)
+
+# Format the means in a nice table
+the.location.means <- data.frame(Mean = round(the.means$A, 4))
+the.bait.means <- data.frame(Mean = round(the.means$B, 4))
+give.me.all.the.means <- round(the.means$AB, 4)
+```
+b. Here are the group means for location:
+`r knitr::kable(the.location.means, format = "markdown")`
+c. Here are the group means for bait:
+`r knitr::kable(the.bait.means, format = "markdown")`
+d. Here are the group means for all treatment levels:
+`r knitr::kable(give.me.all.the.means, format = "markdown")`
+e. Yes, the average number of moths trapped is different for each location. In part c, we get a different average number of moths trapped as we change location.
+
+# IV
+a. There seems to be an interaction effect between food type and food amount. When we decrease the amount of food, the decrease of weight change appears to be larder with beef and pork compared to cereal. 
+```{r IV-a}
+# Do interaction plot
+the.plot.name = "Interaction Plot of Weight Change by Food Amount and Type"
+interaction.plot(x.factor = rat$Amount, trace.factor = rat$Type,
+                 response = rat$Weight, legend = TRUE,
+                 xlab = "Food Amount", ylab = "Weight Change",
+                 trace.label = " Food Type", main = the.plot.name)
+```
+```{r IV-bcd}
+# Find means
+the.means = find.means(rat,mean)
+
+# Format the means in a nice table
+the.amount.means <- data.frame(Mean = round(the.means$A, 4))
+the.weight.means <- data.frame(Mean = round(the.means$B, 4))
+give.me.all.the.means <- round(the.means$AB, 4)
+```
+b. Here are the group means for weight:
+`r knitr::kable(the.weight.means, format = "markdown")`
+c. Here are the group means for amount:
+`r knitr::kable(the.amount.means, format = "markdown")`
+d. Here are the group means for all treatment levels:
+`r knitr::kable(give.me.all.the.means, format = "markdown")`
+e. I believe the weight gain is different for the type of food. The average weight change is 84.9 for cereal compared to 89.6 for beef.
 
 # Appendix
 ```{r appendix, include=TRUE, echo=FALSE, results="asis"}
