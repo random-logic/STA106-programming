@@ -57,6 +57,7 @@ b. $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{i
         - The $j$ groups are independent of each other
         - $\epsilon_{ijk} \sim N(0, \sigma_\epsilon^2)$
     ii. Observations can be dependent between groups since there is a factor effect between groups in our model.
+    iii. Assumption specific to factor effect between groups: $(\gamma\delta)_{ij} = \mu_{ij} + \gamma_i + \delta_j - \mu_{..}$
 c. There seems to be a significant effect of smoking cigarettes on sleep, because there is a change in sleep when we change this factor. The average sleep in hours for those who smoke is $5.90$ compared to $7.04$ for those who don't smoke.
 d. There seems to be a significant effect of smoking marijuana on sleep, because there is a change in sleep when we change this factor. The average sleep in hours for those who smoke is $6.71$ compared to $7.073$ for those who don't.
 e. There seems to be an interaction effect between smoking cigarettes and smoking marijuana on sleep. For those who don't smoke cigarettes, smoking marijuana decreases the average sleep by $0.18$ hours. However, for those who do smoke cigarettes, smoking marijuana increases the average sleep by $0.97$.
