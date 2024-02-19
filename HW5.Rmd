@@ -17,14 +17,14 @@ R_squared <- c("AB|(A+B)" = (SSE[["A+B"]] - SSE[["AB"]]) / SSE[["A+B"]])
 n_T <- 430
 a <- 2
 b <- 2
-alpha <- 0.10
 
 SSE_F <- SSE["AB"]
 SSE_R <- SSE["A+B"]
 df_SSE_F <- n_T - a * b
 df_SSE_R <- n_T - a - b + 1
 
-F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F)
+MSE_F <- SSE_F / df_SSE_F
+F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F) / MSE_F
 df_num <- df_SSE_R - df_SSE_F
 df_den <- df_SSE_F
 
@@ -36,7 +36,7 @@ c. $H_0:$ All $(\gamma\delta)_{ij} = 0$
 <br> $H_A:$ At least one $(\gamma\delta)_{ij} \neq 0$
 <br> $F_s = `r round(F_s, 4)`$
 <br> $p = `r round(the.p.value, 4)`$
-<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect between our two factors.
+<br> Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect between our two factors.
 d. The p-value represents the type I error, which is the probability that we reject $H_0$ when in reality $H_0$ is true. In other words, it's the probability that we claim that there is an interaction effect when in reality there is no interaction effect.
 
 # 2
@@ -60,14 +60,14 @@ e. Factor B seems to be more important because the $R^2$ value for it is larger 
 n_T <- 36
 a <- 3
 b <- 3
-alpha <- 0.05
 
 SSE_F <- SSE["AB"]
 SSE_R <- SSE["A+B"]
 df_SSE_F <- n_T - a * b
 df_SSE_R <- n_T - a - b + 1
 
-F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F)
+MSE_F <- SSE_F / df_SSE_F
+F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F) / MSE_F
 df_num <- df_SSE_R - df_SSE_F
 df_den <- df_SSE_F
 
@@ -98,14 +98,14 @@ d. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
 n_T <- 165
 a <- 2
 b <- 2
-alpha <- 0.05
 
 SSE_F <- SSE["A+B"]
 SSE_R <- SSE["B"]
 df_SSE_F <- n_T - a - b + 1
 df_SSE_R <- n_T - b
 
-F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F)
+MSE_F <- SSE_F / df_SSE_F
+F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F) / MSE_F
 df_num <- df_SSE_R - df_SSE_F
 df_den <- df_SSE_F
 
@@ -122,14 +122,14 @@ a. $H_0:$ All $\gamma_i = 0$
 n_T <- 165
 a <- 2
 b <- 2
-alpha <- 0.05
 
 SSE_F <- SSE["A+B"]
 SSE_R <- SSE["A"]
 df_SSE_F <- n_T - a - b + 1
 df_SSE_R <- n_T - a
 
-F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F)
+MSE_F <- SSE_F / df_SSE_F
+F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F) / MSE_F
 df_num <- df_SSE_R - df_SSE_F
 df_den <- df_SSE_F
 
