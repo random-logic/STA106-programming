@@ -47,10 +47,14 @@ the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 a. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
 b. The value in a does not suggest interaction between factors will play an important role because this value is small (close to 0).
 c. $H_0:$ All $(\gamma\delta)_{ij} = 0$
-<br> $H_A:$ At least one $(\gamma\delta)_{ij} \neq 0$
-<br> $F_s = `r round(F_s, 4)`$
-<br> $p = `r round(the.p.value, 4)`$
-<br> Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect between our two factors.
+
+   $H_A:$ At least one $(\gamma\delta)_{ij} \neq 0$
+
+   $F_s = `r round(F_s, 4)`$
+   
+   $p = `r round(the.p.value, 4)`$
+   
+   Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect between our two factors.
 d. The p-value represents the type I error, which is the probability that we reject $H_0$ when in reality $H_0$ is true. In other words, it's the probability that we claim that there is an interaction effect when in reality there is no interaction effect.
 
 # 2
@@ -88,9 +92,9 @@ df_den <- df_SSE_F
 the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 ```
 a. $H_0:$ All $(\gamma\delta)_{ij} = 0$
-<br> $H_A:$ At least one $(\gamma\delta)_{ij} \neq 0$
-<br> $F_s = `r round(F_s, 4)`$
-<br> $p = `r round(the.p.value, 4)`$
+   $H_A:$ At least one $(\gamma\delta)_{ij} \neq 0$
+   $F_s = `r round(F_s, 4)`$
+   $p = `r round(the.p.value, 4)`$
 b. Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect between our two factors.
 c. The type I error is the probability that we reject $H_0$ when in reality $H_0$ is true. In other words, it's the probability that we claim that there is an interaction effect when in reality there is no interaction effect.
 d. No, we would not test for individual effects of A and B, because we cannot simplify our model due to rejecting $H_0$. This is only needed if we accept $H_0$ to see if we can simplify the model any further.
@@ -104,7 +108,7 @@ a. $\bar Y_{11.} - \bar Y_{12.}$ represents the difference between the sample me
 b. $\bar Y_{11.} - \bar Y_{21.}$ represents the difference between the sample mean of all observations within female no smoking and the sample mean of all observations within male no smoking.
 c. We want smallest type I error, so $\alpha = 0.001$. Since $p \geq \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect between the two factors.
 d. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
-<br> Our value seems reasonable because we concluded that there is no interaction effect which is typical for small values of $R^2$ (close to 0).
+   Our value seems reasonable because we concluded that there is no interaction effect which is typical for small values of $R^2$ (close to 0).
 
 # 5
 ```{r 5-a}
@@ -126,10 +130,10 @@ df_den <- df_SSE_F
 the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 ```
 a. $H_0:$ All $\gamma_i = 0$
-<br> $H_A:$ At least one $\gamma_i \neq 0$
-<br> $F_s = `r round(F_s, 4)`$
-<br> $p = `r round(the.p.value, 4)`$
-<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
+   $H_A:$ At least one $\gamma_i \neq 0$
+   $F_s = `r round(F_s, 4)`$
+   $p = `r round(the.p.value, 4)`$
+   Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
 
 ```{r 5-b}
 # using SSE from 4
@@ -150,10 +154,10 @@ df_den <- df_SSE_F
 the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 ```
 b. $H_0:$ All $\gamma_i = 0$
-<br> $H_A:$ At least one $\gamma_i \neq 0$
-<br> $F_s = `r round(F_s, 4)`$
-<br> $p = `r round(the.p.value, 4)`$
-<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor B effect.
+   $H_A:$ At least one $\gamma_i \neq 0$
+   $F_s = `r round(F_s, 4)`$
+   $p = `r round(the.p.value, 4)`$
+   Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor B effect.
 
 ```{r 5-c}
 # using SSE from 4
@@ -163,16 +167,16 @@ R_squared <- c(
 )
 ```
 c. $R^2\{(A+B)|B\} = `r round(R_squared[["(A+B)|B"]], 4)`$
-<br> $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
+   $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
 d. I would recommend to use the model that includes factor A and factor B effect, but excludes the interaction effect. For the interaction effect, our p-value and $R^2$ both suggest that there is no effect. For factor A and factor B effect, our p-value suggests that there is an effect while our $R^2$ does not suggest an effect due to the low value (close to 0). However, the F-statistic test is an actual test while the $R^2$ value only suggests what we might want to do, so the F-statistic test takes precedence. This reason combined with wanting to be conservative, we should include both factor A and factor B effect. The model is as follows:
-<br> $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
+   $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
 
 # 6
 a. False, while it may suggest which model we might want to use, using the F-statistic test to determine that is more sound and thus takes precedence.
 b. True, the factor A effect is what causes at least one pair-wise comparison of factor A means to have a significant difference.
 c. True, we can see this in the equation as follows:
-<br> $R^2 = \frac{SSE_F - SSE_R}{SSE_F}$
-<br> In the equation, we are assuming that the full model always has more unexplained variance ($SSE$) than the reduced model. Hence, the numerator is always less than or equal to the denominator.
+   $R^2 = \frac{SSE_F - SSE_R}{SSE_F}$
+   In the equation, we are assuming that the full model always has more unexplained variance ($SSE$) than the reduced model. Hence, the numerator is always less than or equal to the denominator.
 d. False, as total population variance is unknown, we use $SSE$ to estimate it, i.e. $\sigma_\epsilon^2 = SSE$. However, $SSE$ differs between models, so our total variance also differs. This means that the variance for each observation differs depending on the model we choose.
 
 # I
@@ -208,11 +212,11 @@ the.p.value <- the.anova.result$"Pr(>F)"[2]
 ```
 a. $n_T = `r n_T`$, $a = `r a`$, $b = `r b`$
 b. $SSE\{AB\} = `r round(SSE["SSE", "AB"], 4)`$
-<br> $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
+   $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
 c. The table of all $\bar Y_{ij}$ is as follows:
-<br> `r knitr::kable(means, format = 'markdown')`
+   `r knitr::kable(means, format = 'markdown')`
 d. $F_s = `r round(the.f.statistic, 4)`$
-<br> $p = `r round(the.p.value, 4)`$
+   $p = `r round(the.p.value, 4)`$
 e. Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect.
 
 # II
@@ -238,17 +242,17 @@ the.f.statistic_B <- the.anova.result_B$"F"[2]
 the.p.value_B <- the.anova.result_B$"Pr(>F)"[2]
 ```
 a. $R^2\{(A+B)|B\} = `r round(R_squared[["(A+B)|B"]], 4)`$
-<br> $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
+   $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
 b. $\bar Y_{H.} - \bar Y_{L.} = `r round(diff.means_A, 4)`$
-<br> $\bar Y_{.B} - \bar Y_{.P} = `r round(diff.means_B, 4)`$
+   $\bar Y_{.B} - \bar Y_{.P} = `r round(diff.means_B, 4)`$
 c. $F_s = `r round(the.f.statistic_A, 4)`$
-<br> $p = `r round(the.p.value_A, 4)`$
-<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
+   $p = `r round(the.p.value_A, 4)`$
+   Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
 d. $F_s = `r round(the.f.statistic_B, 4)`$
-<br> $p = `r round(the.p.value_B, 4)`$
-<br> Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no factor B effect.
+   $p = `r round(the.p.value_B, 4)`$
+   Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no factor B effect.
 e. The final model we suggest using is the one using factor A effect only because from our F-statistic tests, we conclude that there is only factor A effect, no factor B effect, and no interaction effect. The model is as follows:
-<br> $Y_{ij} = \mu_. + \gamma_i + \epsilon_{ij}$
+   $Y_{ij} = \mu_. + \gamma_i + \epsilon_{ij}$
 
 # III
 ```{r III}
@@ -281,13 +285,13 @@ colnames(means)[which(names(means) == "Y")] <- "$\\bar Y_{ij.}$"
 ```
 a. $n_T = `r n_T`$, $a = `r a`$, $b = `r b`$
 b. $SSE\{AB\} = `r round(SSE["SSE", "AB"], 4)`$
-<br> $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
-<br> $SSE\{A\} = `r round(SSE["SSE", "A"], 4)`$
-<br> $SSE\{B\} = `r round(SSE["SSE", "B"], 4)`$
-<br> $SSE\{Empty\} = `r round(SSE["SSE", "Empty/Null"], 4)`$
+   $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
+   $SSE\{A\} = `r round(SSE["SSE", "A"], 4)`$
+   $SSE\{B\} = `r round(SSE["SSE", "B"], 4)`$
+   $SSE\{Empty\} = `r round(SSE["SSE", "Empty/Null"], 4)`$
 c. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
 d. The both, exp group had the lowest average time to complete the project.
-<br> `r knitr::kable(means, format = 'markdown')`
+   `r knitr::kable(means, format = 'markdown')`
 
 # IV
 ```{r IV}
@@ -301,11 +305,11 @@ R_squared[["A|N"]] <- Partial.R2(N, A)
 R_squared[["B|N"]] <- Partial.R2(N, B)
 ```
 a. $F_s = `r round(the.f.statistic, 4)`$
-<br> $p = `r round(the.p.value, 4)`$
-<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect and we should use the full model as follows:
-<br> $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$
+   $p = `r round(the.p.value, 4)`$
+   Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect and we should use the full model as follows:
+   $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$
 b. $R^2\{A|\cdot\} = `r round(R_squared[["A|N"]], 4)`$
-<br> $R^2\{B|\cdot\} = `r round(R_squared[["B|N"]], 4)`$
+   $R^2\{B|\cdot\} = `r round(R_squared[["B|N"]], 4)`$
 c. The values in b suggests that the main effects should be included because these are large.
 d. I would suggest a programmer in the both, exp treatment group to complete a project as soon as possible because it has the lowest average completion time and our results show that both of these factors from the treatment do affect the completion time.
 
