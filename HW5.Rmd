@@ -215,6 +215,7 @@ b. $SSE\{AB\} = `r round(SSE["SSE", "AB"], 4)`$
    $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
 c. The table of all $\bar Y_{ij}$ is as follows:
    `r knitr::kable(means, format = 'markdown')`
+
 d. $F_s = `r round(the.f.statistic, 4)`$
    $p = `r round(the.p.value, 4)`$
 e. Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect.
