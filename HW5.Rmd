@@ -7,6 +7,19 @@ author: "Andrew Jowe"
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+```{r Libraries}
+rat <- read.csv("rat.csv")
+```
+
+```{r Functions}
+Partial.R2 = function(small.model,big.model){
+  SSE1 = sum(small.model$residuals^2)
+  SSE2 = sum(big.model$residuals^2)
+  PR2 = (SSE1 - SSE2)/SSE1
+  return(PR2)
+}
+```
+
 # 1
 ```{r 1}
 # a
@@ -113,7 +126,7 @@ the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 ```
 a. $H_0:$ All $\gamma_i = 0$
 <br> $H_A:$ At least one $\gamma_i \neq 0$
-<br> $F_s = `r F_s`$
+<br> $F_s = `r round(F_s, 4)`$
 <br> $p = `r round(the.p.value, 4)`$
 <br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
 
@@ -137,7 +150,7 @@ the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 ```
 b. $H_0:$ All $\gamma_i = 0$
 <br> $H_A:$ At least one $\gamma_i \neq 0$
-<br> $F_s = `r F_s`$
+<br> $F_s = `r round(F_s, 4)`$
 <br> $p = `r round(the.p.value, 4)`$
 <br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor B effect.
 
@@ -150,7 +163,8 @@ R_squared <- c(
 ```
 c. $R^2\{(A+B)|B\} = `r round(R_squared[["(A+B)|B"]], 4)`$
 <br> $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
-d. I would recommend to use the model that includes factor A and factor B effect, but excludes the interaction effect. For the interaction effect, our p-value and $R^2$ both suggest that there is no effect. For factor A and factor B effect, our p-value suggests that there is an effect while our $R^2$ does not suggest an effect due to the low value (close to 0). However, the F-statistic test is an actual test while the $R^2$ value only suggests what we might want to do, so the F-statistic test takes precedence. This reason combined with wanting to be conservative, we should include both factor A and factor B effect.
+d. I would recommend to use the model that includes factor A and factor B effect, but excludes the interaction effect. For the interaction effect, our p-value and $R^2$ both suggest that there is no effect. For factor A and factor B effect, our p-value suggests that there is an effect while our $R^2$ does not suggest an effect due to the low value (close to 0). However, the F-statistic test is an actual test while the $R^2$ value only suggests what we might want to do, so the F-statistic test takes precedence. This reason combined with wanting to be conservative, we should include both factor A and factor B effect. The model is as follows:
+<br> $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
 
 # 6
 a. False, while it may suggest which model we might want to use, using the F-statistic test to determine that is more sound and thus takes precedence.
@@ -159,6 +173,86 @@ c. True, we can see this in the equation as follows:
 <br> $R^2 = \frac{SSE_F - SSE_R}{SSE_F}$
 <br> In the equation, we are assuming that the full model always has more unexplained variance ($SSE$) than the reduced model. Hence, the numerator is always less than or equal to the denominator.
 d. False, as total population variance is unknown, we use $SSE$ to estimate it, i.e. $\sigma_\epsilon^2 = SSE$. However, $SSE$ differs between models, so our total variance also differs. This means that the variance for each observation differs depending on the model we choose.
+
+# I
+```{r I}
+# a
+n_T <- nrow(rat)
+a <- length(unique(rat$Amount))
+b <- length(unique(rat$Type))
+
+# b
+the.data <- rat
+names(the.data) = c("Y","A","B")
+
+AB = lm(Y ~ A*B,the.data)
+A.B = lm(Y ~ A + B,the.data)
+A = lm(Y ~ A,the.data)
+B = lm(Y ~ B,the.data)
+N = lm(Y ~ 1, the.data)
+
+all.models = list(AB,A.B,A,B,N)
+SSE = t(as.matrix(sapply(all.models,function(M) sum(M$residuals^2))))
+colnames(SSE) = c("AB","(A+B)","A","B","Empty/Null")
+rownames(SSE) = "SSE"
+
+# c
+means <- aggregate(Y ~ A + B, data = the.data, FUN = mean)
+colnames(means)[which(names(means) == "Y")] <- "$\\bar Y_{ij.}$"
+
+# d
+the.anova.result <- anova(A.B, AB)
+the.f.statistic <- the.anova.result$"F"[2]
+the.p.value <- the.anova.result$"Pr(>F)"[2]
+```
+a. $n_T = `r n_T`$, $a = `r a`$, $b = `r b`$
+b. $SSE\{AB\} = `r round(SSE["SSE", "AB"], 4)`$
+<br> $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
+c. The table of all $\bar Y_{ij}$ is as follows:
+<br> `r knitr::kable(means, format = 'markdown')`
+d. $F_s = `r round(the.f.statistic, 4)`$
+<br> $p = `r round(the.p.value, 4)`$
+e. Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect.
+
+# II
+```{r II}
+# a
+R_squared <- c("(A+B)|B" = Partial.R2(B, A.B), "(A+B)|A" = Partial.R2(A, A.B))
+
+# b
+means_A <- aggregate(Y ~ A, data = the.data, FUN = mean)
+diff.means_A <- means_A$Y[means_A$A == "High"] - means_A$Y[means_A$A == "Low"]
+
+means_B <- aggregate(Y ~ B, data = the.data, FUN = mean)
+diff.means_B <- means_B$Y[means_B$B == "Beef"] - means_B$Y[means_B$B == "Pork"]
+
+# c
+the.anova.result_A <- anova(B, A.B)
+the.f.statistic_A <- the.anova.result_A$"F"[2]
+the.p.value_A <- the.anova.result_A$"Pr(>F)"[2]
+
+# d
+the.anova.result_B <- anova(A, A.B)
+the.f.statistic_B <- the.anova.result_B$"F"[2]
+the.p.value_B <- the.anova.result_B$"Pr(>F)"[2]
+```
+a. $R^2\{(A+B)|B\} = `r round(R_squared[["(A+B)|B"]], 4)`$
+<br> $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
+b. $\bar Y_{H.} - \bar Y_{L.} = `r round(diff.means_A, 4)`$
+<br> $\bar Y_{.B} - \bar Y_{.P} = `r round(diff.means_B, 4)`$
+c. $F_s = `r round(the.f.statistic_A, 4)`$
+<br> $p = `r round(the.p.value_A, 4)`$
+<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
+d. $F_s = `r round(the.f.statistic_B, 4)`$
+<br> $p = `r round(the.p.value_B, 4)`$
+<br> Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no factor B effect.
+e. The final model we suggest using is the one using factor A effect only because from our F-statistic tests, we conclude that there is only factor A effect, no factor B effect, and no interaction effect. The model is as follows:
+<br> $Y_{ij} = \mu_. + \gamma_i + \epsilon_{ij}$
+
+# III
+```{r III}
+```
+a. ?? Todo: III and IV
 
 # Appendix
 ```{r appendix, results="asis"}
