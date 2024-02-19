@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r Libraries}
 rat <- read.csv("rat.csv")
+prog <- read.csv("Prog.csv")
 ```
 
 ```{r Functions}
@@ -251,8 +252,50 @@ e. The final model we suggest using is the one using factor A effect only becaus
 
 # III
 ```{r III}
+# a
+n_T <- nrow(prog)
+a <- length(unique(prog$type))
+b <- length(unique(prog$years))
+
+# b
+the.data <- prog
+names(the.data) = c("Y","A","B")
+
+AB = lm(Y ~ A*B,the.data)
+A.B = lm(Y ~ A + B,the.data)
+A = lm(Y ~ A,the.data)
+B = lm(Y ~ B,the.data)
+N = lm(Y ~ 1, the.data)
+
+all.models = list(AB,A.B,A,B,N)
+SSE = t(as.matrix(sapply(all.models,function(M) sum(M$residuals^2))))
+colnames(SSE) = c("AB","(A+B)","A","B","Empty/Null")
+rownames(SSE) = "SSE"
+
+# c
+R_squared <- c("AB|(A+B)" = Partial.R2(A.B, AB))
+
+# d
+means <- aggregate(Y ~ A + B, data = the.data, FUN = mean)
+colnames(means)[which(names(means) == "Y")] <- "$\\bar Y_{ij.}$"
 ```
-a. ?? Todo: III and IV
+a. $n_T = `r n_T`$, $a = `r a`$, $b = `r b`$
+b. $SSE\{AB\} = `r round(SSE["SSE", "AB"], 4)`$
+<br> $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
+<br> $SSE\{A\} = `r round(SSE["SSE", "A"], 4)`$
+<br> $SSE\{B\} = `r round(SSE["SSE", "B"], 4)`$
+<br> $SSE\{Empty\} = `r round(SSE["SSE", "Empty/Null"], 4)`$
+c. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
+d. The both, exp group had the lowest average time to complete the project.
+<br> `r knitr::kable(means, format = 'markdown')`
+
+# IV
+```{r IV}
+the.anova.result <- anova(A.B, AB)
+the.f.statistic <- the.anova.result$"F"[2]
+the.p.value <- the.anova.result$"Pr(>F)"[2]
+```
+a. 
 
 # Appendix
 ```{r appendix, results="asis"}
