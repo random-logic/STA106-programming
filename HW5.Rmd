@@ -1,0 +1,119 @@
+---
+title: "HW 5"
+author: "Andrew Jowe"
+---
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# 1
+```{r 1}
+# a
+SSE <- c("AB" = 676.80, "A+B" = 680.31)
+R_squared <- c("AB|(A+B)" = (SSE[["A+B"]] - SSE[["AB"]]) / SSE[["A+B"]])
+
+# c
+n_T <- 430
+a <- 2
+b <- 2
+alpha <- 0.10
+
+SSE_F <- SSE["AB"]
+SSE_R <- SSE["A+B"]
+df_SSE_F <- n_T - a * b
+df_SSE_R <- n_T - a - b + 1
+
+F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F)
+df_num <- df_SSE_R - df_SSE_F
+df_den <- df_SSE_F
+
+the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
+```
+a. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
+b. The value in a does not suggest interaction between factors will play an important role because this value is small (close to 0).
+c. $H_0:$ All $(\gamma\delta)_{ij} = 0$
+<br> $H_A:$ At least one $(\gamma\delta)_{ij} \neq 0$
+<br> $F_s = `r round(F_s, 4)`$
+<br> $p = `r round(the.p.value, 4)`$
+<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect between our two factors.
+d. The p-value represents the type I error, which is the probability that we reject $H_0$ when in reality $H_0$ is true. In other words, it's the probability that we claim that there is an interaction effect when in reality there is no interaction effect.
+
+# 2
+```{r 2}
+SSE <- c("AB" = 1.63, "A+B" = 31.05, "A" = 154.71,
+         "B" = 251.07, "Null" = 374.73)
+R_squared <- c(
+  "A|Null" = (SSE[["Null"]] - SSE[["A"]]) / SSE[["A"]],
+  "B|Null" = (SSE[["Null"]] - SSE[["B"]]) / SSE[["B"]]
+)
+```
+a. $\bar Y_{12.}$ is the sample mean for all observations within low dose A and medium dose B.
+b. $\bar Y_{12.}$ is the sample mean for all observations within low dose A.
+c. $R^2\{A|\cdot\} = `r round(R_squared[["A|Null"]], 4)`$
+d. $R^2\{A|\cdot\} = `r round(R_squared[["B|Null"]], 4)`$
+e. Factor B seems to be more important because the $R^2$ value for it is larger than factor A.
+
+# 3
+```{r 3}
+# using SSE from 2
+n_T <- 36
+a <- 3
+b <- 3
+alpha <- 0.05
+
+SSE_F <- SSE["AB"]
+SSE_R <- SSE["A+B"]
+df_SSE_F <- n_T - a * b
+df_SSE_R <- n_T - a - b + 1
+
+F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F)
+df_num <- df_SSE_R - df_SSE_F
+df_den <- df_SSE_F
+
+F_s <- (SSE_R - SSE_F) / (df_SSE_R - df_SSE_F)
+df_num <- df_SSE_R - df_SSE_F
+df_den <- df_SSE_F
+
+the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
+```
+a. $H_0:$ All $(\gamma\delta)_{ij} = 0$
+<br> $H_A:$ At least one $(\gamma\delta)_{ij} \neq 0$
+<br> $F_s = `r round(F_s, 4)`$
+<br> $p = `r round(the.p.value, 4)`$
+b. Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect between our two factors.
+c. The type I error is the probability that we reject $H_0$ when in reality $H_0$ is true. In other words, it's the probability that we claim that there is an interaction effect when in reality there is no interaction effect.
+d. No, we would not test for individual effects of A and B, because we cannot simplify our model due to rejecting $H_0$. This is only needed if we accept $H_0$ to see if we can simplify the model any further.
+
+# 4
+```{r 4}
+SSE <- c("AB" =  682.43, "A+B" = 708.34)
+R_squared <- c("AB|(A+B)" = (SSE[["A+B"]] - SSE[["AB"]]) / SSE[["A+B"]])
+```
+a. $\bar Y_{11.} - \bar Y_{12.}$ represents the difference between the sample mean of all observations within female no smoking and the sample mean of all observations within female yes smoking.
+b. $\bar Y_{11.} - \bar Y_{21.}$ represents the difference between the sample mean of all observations within female no smoking and the sample mean of all observations within male no smoking.
+c. We want smallest type I error, so $\alpha = 0.001$. Since $p \geq \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect between the two factors.
+d. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
+<br> Our value seems reasonable because we concluded that there is no interaction effect which is typical for small values of $R^2$ (close to 0).
+
+# 5
+
+# Appendix
+```{r appendix, results="asis"}
+# Get all the labels
+all_labels <- knitr::all_labels()
+
+# Print out code along with labels
+for (label in all_labels) {
+  if (label == "setup" || label == "appendix") {
+    next
+  }
+
+  code <- knitr::knit_code$get(label)
+
+  cat("##", label, "\n")
+  cat("```r \n")
+  cat(code, sep = "\n")
+  cat("```\n")
+}
+```
