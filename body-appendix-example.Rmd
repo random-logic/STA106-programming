@@ -1,3 +1,8 @@
+---
+title: "HW X"
+author: "Andrew Jowe"
+---
+
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
