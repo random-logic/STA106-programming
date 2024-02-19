@@ -44,15 +44,15 @@ d. The p-value represents the type I error, which is the probability that we rej
 SSE <- c("AB" = 1.63, "A+B" = 31.05, "A" = 154.71,
          "B" = 251.07, "Null" = 374.73)
 R_squared <- c(
-  "A|Null" = (SSE[["Null"]] - SSE[["A"]]) / SSE[["A"]],
-  "B|Null" = (SSE[["Null"]] - SSE[["B"]]) / SSE[["B"]]
+  "A|Null" = (SSE[["Null"]] - SSE[["A"]]) / SSE[["Null"]],
+  "B|Null" = (SSE[["Null"]] - SSE[["B"]]) / SSE[["Null"]]
 )
 ```
 a. $\bar Y_{12.}$ is the sample mean for all observations within low dose A and medium dose B.
 b. $\bar Y_{12.}$ is the sample mean for all observations within low dose A.
 c. $R^2\{A|\cdot\} = `r round(R_squared[["A|Null"]], 4)`$
-d. $R^2\{A|\cdot\} = `r round(R_squared[["B|Null"]], 4)`$
-e. Factor B seems to be more important because the $R^2$ value for it is larger than factor A.
+d. $R^2\{B|\cdot\} = `r round(R_squared[["B|Null"]], 4)`$
+e. Factor A seems to be more important because the $R^2$ value for it is larger than factor B.
 
 # 3
 ```{r 3}
