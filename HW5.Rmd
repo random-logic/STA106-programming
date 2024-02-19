@@ -291,11 +291,23 @@ d. The both, exp group had the lowest average time to complete the project.
 
 # IV
 ```{r IV}
+# a
 the.anova.result <- anova(A.B, AB)
 the.f.statistic <- the.anova.result$"F"[2]
 the.p.value <- the.anova.result$"Pr(>F)"[2]
+
+# b
+R_squared[["A|N"]] <- Partial.R2(N, A)
+R_squared[["B|N"]] <- Partial.R2(N, B)
 ```
-a. 
+a. $F_s = `r round(the.f.statistic, 4)`$
+<br> $p = `r round(the.p.value, 4)`$
+<br> Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect and we should use the full model as follows:
+<br> $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$
+b. $R^2\{A|\cdot\} = `r round(R_squared[["A|N"]], 4)`$
+<br> $R^2\{B|\cdot\} = `r round(R_squared[["B|N"]], 4)`$
+c. The values in b suggests that the main effects should be included because these are large.
+d. I would suggest a programmer in the both, exp treatment group to complete a project as soon as possible because it has the lowest average completion time and our results show that both of these factors from the treatment do affect the completion time.
 
 # Appendix
 ```{r appendix, results="asis"}
