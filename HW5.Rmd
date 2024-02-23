@@ -130,9 +130,13 @@ df_den <- df_SSE_F
 the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 ```
 a. $H_0:$ All $\gamma_i = 0$
+
    $H_A:$ At least one $\gamma_i \neq 0$
+
    $F_s = `r round(F_s, 4)`$
+
    $p = `r round(the.p.value, 4)`$
+
    Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
 
 ```{r 5-b}
@@ -154,9 +158,13 @@ df_den <- df_SSE_F
 the.p.value <- pf(F_s, df_num, df_den, lower.tail = FALSE)
 ```
 b. $H_0:$ All $\gamma_i = 0$
+
    $H_A:$ At least one $\gamma_i \neq 0$
+
    $F_s = `r round(F_s, 4)`$
+
    $p = `r round(the.p.value, 4)`$
+
    Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor B effect.
 
 ```{r 5-c}
@@ -167,15 +175,20 @@ R_squared <- c(
 )
 ```
 c. $R^2\{(A+B)|B\} = `r round(R_squared[["(A+B)|B"]], 4)`$
+
    $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
+
 d. I would recommend to use the model that includes factor A and factor B effect, but excludes the interaction effect. For the interaction effect, our p-value and $R^2$ both suggest that there is no effect. For factor A and factor B effect, our p-value suggests that there is an effect while our $R^2$ does not suggest an effect due to the low value (close to 0). However, the F-statistic test is an actual test while the $R^2$ value only suggests what we might want to do, so the F-statistic test takes precedence. This reason combined with wanting to be conservative, we should include both factor A and factor B effect. The model is as follows:
+   
    $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
 
 # 6
 a. False, while it may suggest which model we might want to use, using the F-statistic test to determine that is more sound and thus takes precedence.
 b. True, the factor A effect is what causes at least one pair-wise comparison of factor A means to have a significant difference.
 c. True, we can see this in the equation as follows:
+  
    $R^2 = \frac{SSE_F - SSE_R}{SSE_F}$
+  
    In the equation, we are assuming that the full model always has more unexplained variance ($SSE$) than the reduced model. Hence, the numerator is always less than or equal to the denominator.
 d. False, as total population variance is unknown, we use $SSE$ to estimate it, i.e. $\sigma_\epsilon^2 = SSE$. However, $SSE$ differs between models, so our total variance also differs. This means that the variance for each observation differs depending on the model we choose.
 
@@ -212,12 +225,15 @@ the.p.value <- the.anova.result$"Pr(>F)"[2]
 ```
 a. $n_T = `r n_T`$, $a = `r a`$, $b = `r b`$
 b. $SSE\{AB\} = `r round(SSE["SSE", "AB"], 4)`$
+
    $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
 c. The table of all $\bar Y_{ij}$ is as follows:
    `r knitr::kable(means, format = 'markdown')`
 
 d. $F_s = `r round(the.f.statistic, 4)`$
+  
    $p = `r round(the.p.value, 4)`$
+
 e. Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no interaction effect.
 
 # II
@@ -243,16 +259,27 @@ the.f.statistic_B <- the.anova.result_B$"F"[2]
 the.p.value_B <- the.anova.result_B$"Pr(>F)"[2]
 ```
 a. $R^2\{(A+B)|B\} = `r round(R_squared[["(A+B)|B"]], 4)`$
+
    $R^2\{(A+B)|A\} = `r round(R_squared[["(A+B)|A"]], 4)`$
+
 b. $\bar Y_{H.} - \bar Y_{L.} = `r round(diff.means_A, 4)`$
+
    $\bar Y_{.B} - \bar Y_{.P} = `r round(diff.means_B, 4)`$
+
 c. $F_s = `r round(the.f.statistic_A, 4)`$
+
    $p = `r round(the.p.value_A, 4)`$
+
    Since $p \leq \alpha$, we reject $H_0$. Therefore, there is a factor A effect.
+
 d. $F_s = `r round(the.f.statistic_B, 4)`$
+
    $p = `r round(the.p.value_B, 4)`$
+
    Since $p > \alpha$, we fail to reject $H_0$. Therefore, there is no factor B effect.
+
 e. The final model we suggest using is the one using factor A effect only because from our F-statistic tests, we conclude that there is only factor A effect, no factor B effect, and no interaction effect. The model is as follows:
+
    $Y_{ij} = \mu_. + \gamma_i + \epsilon_{ij}$
 
 # III
@@ -285,12 +312,19 @@ means <- aggregate(Y ~ A + B, data = the.data, FUN = mean)
 colnames(means)[which(names(means) == "Y")] <- "$\\bar Y_{ij.}$"
 ```
 a. $n_T = `r n_T`$, $a = `r a`$, $b = `r b`$
+
 b. $SSE\{AB\} = `r round(SSE["SSE", "AB"], 4)`$
+
    $SSE\{A + B\} = `r round(SSE["SSE", "(A+B)"], 4)`$
+
    $SSE\{A\} = `r round(SSE["SSE", "A"], 4)`$
+
    $SSE\{B\} = `r round(SSE["SSE", "B"], 4)`$
+
    $SSE\{Empty\} = `r round(SSE["SSE", "Empty/Null"], 4)`$
+
 c. $R^2\{AB|(A+B)\} = `r round(R_squared[["AB|(A+B)"]], 4)`$
+
 d. The both, exp group had the lowest average time to complete the project.
    `r knitr::kable(means, format = 'markdown')`
 
@@ -306,11 +340,16 @@ R_squared[["A|N"]] <- Partial.R2(N, A)
 R_squared[["B|N"]] <- Partial.R2(N, B)
 ```
 a. $F_s = `r round(the.f.statistic, 4)`$
+
    $p = `r round(the.p.value, 4)`$
+
    Since $p \leq \alpha$, we reject $H_0$. Therefore, there is an interaction effect and we should use the full model as follows:
    $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$
+
 b. $R^2\{A|\cdot\} = `r round(R_squared[["A|N"]], 4)`$
+
    $R^2\{B|\cdot\} = `r round(R_squared[["B|N"]], 4)`$
+   
 c. The values in b suggests that the main effects should be included because these are large.
 d. I would suggest a programmer in the both, exp treatment group to complete a project as soon as possible because it has the lowest average completion time and our results show that both of these factors from the treatment do affect the completion time.
 
