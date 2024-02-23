@@ -181,6 +181,10 @@ c. $R^2\{(A+B)|B\} = `r round(R_squared[["(A+B)|B"]], 4)`$
 d. I would recommend to use the model that includes factor A and factor B effect, but excludes the interaction effect. For the interaction effect, our p-value and $R^2$ both suggest that there is no effect. For factor A and factor B effect, our p-value suggests that there is an effect while our $R^2$ does not suggest an effect due to the low value (close to 0). However, the F-statistic test is an actual test while the $R^2$ value only suggests what we might want to do, so the F-statistic test takes precedence. This reason combined with wanting to be conservative, we should include both factor A and factor B effect. The model is as follows:
    
    $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
+```{r 5-e}
+MSE <- SSE_F / df_SSE_F
+```
+e. $\sigma_\epsilon^2 = `r round(MSE, 4)`$
 
 # 6
 a. False, while it may suggest which model we might want to use, using the F-statistic test to determine that is more sound and thus takes precedence.
@@ -349,7 +353,7 @@ a. $F_s = `r round(the.f.statistic, 4)`$
 b. $R^2\{A|\cdot\} = `r round(R_squared[["A|N"]], 4)`$
 
    $R^2\{B|\cdot\} = `r round(R_squared[["B|N"]], 4)`$
-   
+
 c. The values in b suggests that the main effects should be included because these are large.
 d. I would suggest a programmer in the both, exp treatment group to complete a project as soon as possible because it has the lowest average completion time and our results show that both of these factors from the treatment do affect the completion time.
 
