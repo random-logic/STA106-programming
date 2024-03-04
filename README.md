@@ -1,2 +1,3 @@
 # STA 106 HW
-To convert to PDF, use rmarkdown::render(input, output_format = "pdf_document") where input = the name of the Rmd file to convert.
+- Can use pandoc for conversion
+- Alternatively: https://posit.co/blog/r-markdown-tips-and-tricks-3-time-savers/#:~:text=What%20if%20you%20want%20to,depending%20on%20the%20documentation%20argument.

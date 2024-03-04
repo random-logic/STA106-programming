@@ -1,6 +1,11 @@
 ---
 title: "HW X"
 author: "Andrew Jowe"
+output:
+  html_document:
+    df_print: kable
+  pdf_document:
+    df_print: kable
 ---
 
 ```{r setup, echo=FALSE}

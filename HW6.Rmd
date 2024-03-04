@@ -1,0 +1,224 @@
+---
+title: "HW 6"
+author: "Andrew Jowe"
+output:
+  html_document:
+    df_print: kable
+  pdf_document:
+    df_print: kable
+---
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r Functions}
+# Plus minus function
+plus.minus = function(value) {
+  return(c(-value, value))
+}
+
+# Give me multipliers
+find.mult = function(alpha,a,b,dfSSE,g,group){
+  if(group == "A"){
+    Tuk = round(qtukey(1-alpha,a,dfSSE)/sqrt(2),3)
+    Bon = round(qt(1-alpha/(2*g), dfSSE ) ,3)
+    Sch = round(sqrt((a-1)*qf(1-alpha, a-1, dfSSE)),3)
+  }else if(group == "B"){
+    Tuk = round(qtukey(1-alpha,b,dfSSE)/sqrt(2),3)
+    Bon = round(qt(1-alpha/(2*g), dfSSE ) ,3)
+    Sch = round(sqrt((b-1)*qf(1-alpha, b-1, dfSSE)),3)
+  }else if(group == "AB"){
+    Tuk = round(qtukey(1-alpha,a*b,dfSSE)/sqrt(2),3)
+    Bon = round(qt(1-alpha/(2*g), dfSSE ) ,3)
+    Sch = round(sqrt((a*b-1)*qf(1-alpha, a*b-1, dfSSE)),3)
+  }
+  results = c(Bon, Tuk,Sch)
+  names(results) = c("Bonferroni","Tukey","Scheffe")
+  return(results)
+}
+
+give.me.CI = function(the.data,MSE,equal.weights = TRUE,multiplier,group,cs){
+   if(sum(cs) != 0 & sum(cs !=0 ) != 1){
+    return("Error - you did not input a valid contrast")
+  }else{
+    the.means = find.means(the.data)
+    the.ns =find.means(the.data,length)
+    nt = nrow(the.data)
+    a = length(unique(the.data[,2]))
+    b = length(unique(the.data[,3]))
+    if(group =="A"){
+      if(equal.weights == TRUE){
+        a.means = rowMeans(the.means$AB)
+        est = sum(a.means*cs)
+        mul = rowSums(1/the.ns$AB)
+        SE = sqrt(MSE/b^2 * (sum(cs^2*mul)))
+        N = names(a.means)[cs!=0]
+        CS = paste("(",cs[cs!=0],")",sep = "")
+        fancy = paste(paste(CS,N,sep =""),collapse = "+")
+        names(est) = fancy
+      } else{
+        a.means = the.means$A
+        est = sum(a.means*cs)
+        SE = sqrt(MSE*sum(cs^2*(1/the.ns$A)))
+        N = names(a.means)[cs!=0]
+        CS = paste("(",cs[cs!=0],")",sep = "")
+        fancy = paste(paste(CS,N,sep =""),collapse = "+")
+        names(est) = fancy
+      }
+    }else if(group == "B"){
+      if(equal.weights == TRUE){
+        b.means = colMeans(the.means$AB)
+        est = sum(b.means*cs)
+        mul = colSums(1/the.ns$AB)
+        SE = sqrt(MSE/a^2 * (sum(cs^2*mul)))
+        N = names(b.means)[cs!=0]
+        CS = paste("(",cs[cs!=0],")",sep = "")
+        fancy = paste(paste(CS,N,sep =""),collapse = "+")
+        names(est) = fancy
+      } else{
+        b.means = the.means$B
+        est = sum(b.means*cs)
+        SE = sqrt(MSE*sum(cs^2*(1/the.ns$B)))
+        N = names(b.means)[cs!=0]
+        CS = paste("(",cs[cs!=0],")",sep = "")
+        fancy = paste(paste(CS,N,sep =""),collapse = "+")
+        names(est) = fancy
+      }
+    } else if(group == "AB"){
+      est = sum(cs*the.means$AB)
+      SE = sqrt(MSE*sum(cs^2/the.ns$AB))
+      names(est) = "someAB"
+    }
+    the.CI = est + c(-1,1)*multiplier*SE
+    results = c(est,the.CI)
+    names(results) = c(names(est),"lower bound","upper bound")
+    return(results)
+  }
+}
+```
+
+# 1
+a. The overall trend for factor A is that as we increase the dosage of the first ingredient, the number of hours of relief increases.
+b. The overall trend for factor B is that as we increase the dosage of the second ingredient, the number of hours of relief increases.
+c. I would use the smallest multiplier out of the three for precision since all multipliers can be used.
+d. If we assume no interaction effect, I would say increasing factor A is generally more important for increasing the number of hours of relief since there is a bigger increase from low to medium and medium to high for factor A compared to factor B.
+
+# 2
+
+```{r 2.a}
+a <- 3
+b <- 3
+nidot <- 12
+ndotj <- 12
+nT <- 36
+
+alpha <- 0.05
+g <- 2
+
+SSE <- 1.63
+dfSSE <- nT - a * b
+MSE <- SSE / dfSSE
+
+mu1dot <- 3.88
+mudot1 <- 4.63
+
+all.mult <- find.mult(alpha = alpha, a = a, b = b,
+                      dfSSE = dfSSE, g = g, group = "AB")
+the.mult <- min(all.mult)
+the.CI <- mu1dot - mudot1 + plus.minus(
+  the.mult * sqrt(MSE * (1 / nidot + 1 / ndotj))
+)
+```
+
+a. The 95% confidence interval is $[`r the.CI[1]`, `r the.CI[2]`]$.
+b. We are 95% certain that the difference of hours of relief on average between low dosage of factor A and low dosage of factor B is around `r min(abs(the.CI))` to `r max(abs(the.CI))` lower. This means for low dosage of either drug, people are better off with drug B.
+```{r 2.c}
+alpha <- 0.01
+g <- 2
+
+mu3dot <- 9.83
+mudot3 <- 8.98
+
+all.mult <- find.mult(alpha = alpha, a = a, b = b,
+                      dfSSE = dfSSE, g = g, group = "AB")
+the.mult <- min(all.mult)
+the.CI.1 <- mu1dot - mu3dot + plus.minus(
+  the.mult * sqrt(MSE * (1 / nidot + 1 / nidot))
+)
+the.CI.2 <- mudot1 - mudot3 + plus.minus(
+  the.mult * sqrt(MSE * (1 / ndotj + 1 / ndotj))
+)
+```
+c. The 99% confidence interval for $\mu_{1.} - \mu_{3.}$ is $[`r the.CI.1[1]`, `r the.CI.1[2]`]$. The 99% confidence interval for $\mu_{.1} - \mu_{.3}$ is $[`r the.CI.2[1]`, `r the.CI.2[2]`]$.
+d. The confidence interval for $\mu_{1.} - \mu_{3.}$ tells us that we are 99% certain that difference of hours of relief on average between a low dosage of drug A and a high dosage of drug A is around `r min(abs(the.CI.1))` to `r max(abs(the.CI.1))` lower.
+```{r 2.e}
+alpha <- 0.1
+g <- 1
+
+nij <- 4
+
+mu11 <- 2.48
+mu13 <- 4.58
+
+all.mult <- find.mult(alpha = alpha, a = a, b = b,
+                      dfSSE = dfSSE, g = g, group = "AB")
+the.mult <- min(all.mult)
+the.CI <- mu11 - mu13 + plus.minus(
+  the.mult * sqrt(MSE * (1 / nij + 1 / nij))
+)
+```
+e. The 90% confidence interval is $[`r the.CI[1]`, `r the.CI[2]`]$. We are 90% certain that the difference of hours of relief on average between low dosage of factor A and high dosage of factor A is around `r min(abs(the.CI))` to `r max(abs(the.CI))` lower for those who took low dosage of factor B.
+
+# 3
+
+a. Yes, because 0 is not in our interval.
+b. Yes, because 0 is not in our interval.
+c. Yes, because 0 is not in our interval.
+d. I would have them take a high dosage of drug A and drug B because we have clearly shown higher dosages of both drugs yields better results.
+
+# 4
+a. Yes, a weighted confidence interval changes the bounds compared to the unweighted confidence interval. Lets look at the equation for confidence interval:
+    - $\sum\sum c_{ij} \bar{Y_{ij}} \pm t_{\alpha/2, df(SSE)} \sqrt{MSE \sum \sum \frac{c_{ij}^2}{n_{ij}}}$
+    - We can tell that the weights can change not only the center of the confidence interval but also the spread of the confidence interval. Both of these will affect the bounds.
+b. ??
+c. One reason to give unequal weights for smokers is due to the unequal sample sizes. Since the sample size of smokers is larger, we can assign a larger weight to this as it is more reliable information and indicates greater precision.
+d. One reason to give equal weights is because unequal weights makes interpretation of the result difficult.
+
+# 5
+a. We are 95% certain that females on average have around 0.84 to 2.18 less lung capacity compared to males.
+b. It would be unusual because -3 is not in our confidence interval.
+c. We are 95% certain that nonsmokers on average have around 1.82 to 2.45 more lung capacity compared to smokers.
+d. Yes, because 0 is not in our confidence interval.
+
+# 6
+a. Lets interpret the confidence interval for $\mu_{11} - \mu_{12}$. The difference of lung capacity on average between non smokers and smokers is 0.4 to 2.6 more for females.
+b. No, because our interval from (a) includes the interaction effect of A on B compared to (5c) which only accounted for factor B.
+c. No, because our interval from (a) includes the interaction effect of A on B compared to (5c) which only accounted for factor B.
+d. $\beta_0 = 7.30$ is our default modifier regardless of which group the subject belongs to. $\beta_1 = 1.32$ is our modifier if the subject is within Male group of factor A. $\beta_2 = -2.180$ is our modifier if the subject is within the smokers group of factor B.
+
+# 7
+a. True. If there is no interaction effect, we don't expect a change in confidence interval if we choose to look at different groups in factor B when contrasting two means in factor A. We might as well compute the confidence interval for a contrast of $\mu_{i.}$ or $\mu_{.j}$.
+b. False. The multiplier used should be the smallest multiplier out of all the multipliers. Even though Bonferroni multiplier can be used for any contrast, it is not necessarily the smallest.
+c. False. These multipliers are used for creating confidence intervals that contrast means, not for finding the true population mean.
+d. True. The amount of parameters to estimate for the regression model is the same as the model we chose. In our case, we chose the no interaction model, which has $a + b - 1$ parameters.
+
+# Appendix
+```{r appendix, results="asis"}
+# Get all the labels
+all_labels <- knitr::all_labels()
+
+# Print out code along with labels
+for (label in all_labels) {
+  if (label == "setup" || label == "appendix") {
+    next
+  }
+
+  code <- knitr::knit_code$get(label)
+
+  cat("##", label, "\n")
+  cat("```r \n")
+  cat(code, sep = "\n")
+  cat("```\n")
+}
+```
