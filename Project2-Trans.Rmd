@@ -1,0 +1,473 @@
+---
+title: "Project 2 Outliers and Transformation"
+author: "Andrew Jowe"
+output:
+  html_document:
+    df_print: kable
+  pdf_document:
+    df_print: kable
+---
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Assumption
+$\alpha = 0.1$ for both const variance and normality test.
+
+# Import dataset and get model fit
+```{r 1}
+the.data <- read.csv("NewHawk.csv")
+the.model <- lm(Wing ~ Species, data = the.data)
+model.fit <- aov(Wing ~ Species,
+  data = the.data
+)
+```
+
+# Get QQ Plot
+```{r}
+car::qqPlot(model.fit$residuals,
+  id = FALSE # remove point identification
+)
+```
+
+# Do test for normality
+```{r}
+the.SWtest = shapiro.test(model.fit$residuals)
+the.SWtest
+```
+
+# Do plot for variance
+```{r}
+plot(model.fit, which = 3)
+```
+
+# Do test for const variance
+```{r}
+car::leveneTest(model.fit)
+```
+
+# Transformation Possibilities
+1. PPCC
+2. Shapiro-Wilks
+3. Log-Likelihood 
+4. 
+```{r}
+# All transformations considered
+#QQplot
+L1 <- EnvStats::boxcox(model.fit, objective.name = "PPCC", optimize = TRUE)$lambda
+#Shapiro-Wilks
+L2 <- EnvStats::boxcox(model.fit, objective.name = "Shapiro-Wilk", optimize = TRUE)$lambda
+L3 <- EnvStats::boxcox(the.data$Wing, objective.name = "Log-Likelihood",optimize = TRUE)$lambda
+```
+
+# No outlier removal, PPCC Transformation
+```{r}
+# The transformation function to get transformed model
+give.me.t.model <- function(L, data = the.data) {
+  YT = (data$Wing^(L) - 1) / L
+  t.data = data.frame(Wing = YT, Species = data$Species)
+  t.model = aov(Wing ~ Species, data = t.data)
+  return(t.model)
+}
+```
+
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L1)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# No outlier removal, Log Likelihood Transformation
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L3)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# No outlier removal, SW Transformation
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L2)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Possible outlier removal techniques
+1. Outlier removal via box plot
+2. Semi-Studentized Residuals: we can use this since we have the assumption that our variance is constant from our original test. We don't need to do studentized residuals since this is a more robust replacement.
+
+# Removing outliers via box plot (1)
+```{r}
+# remove outliers
+the.box.plot <- boxplot(Wing ~ Species, data = the.data)
+outliers <- the.box.plot$out
+data.no.outlier.1 <- the.data[!the.data$Wing %in% outliers, ]
+```
+
+```{r}
+# Get summary of this model
+t.model <- aov(Wing ~ Species, data = data.no.outlier.1)
+model.no.outlier.1 <- t.model
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+  id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Removing outliers via Studentized Residuals (2)
+$\alpha = 0.05$
+
+```{r}
+rij = rstandard(the.model)
+alpha = 0.05
+
+nt = nrow(the.data) #Calculates the total sample size
+a = length(unique(the.data$Species)) #Calculates the value of a
+t.cutoff= qt(1-alpha/(2*nt), nt-a)
+CO.rij = which(abs(rij) > t.cutoff)
+
+outliers = CO.rij
+data.no.outlier.2 = the.data[-outliers,]
+```
+
+```{r}
+# Get summary of this model
+t.model <- aov(Wing ~ Species, data = data.no.outlier.2)
+model.no.outlier.2 <- t.model
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+  id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Remove outliers (1) and PPCC Transformation
+```{r}
+# All transformations considered
+#QQplot
+L1 <- EnvStats::boxcox(model.no.outlier.1, objective.name = "PPCC", optimize = TRUE)$lambda
+#Shapiro-Wilks
+L2 <- EnvStats::boxcox(model.no.outlier.1, objective.name = "Shapiro-Wilk", optimize = TRUE)$lambda
+L3 <- EnvStats::boxcox(data.no.outlier.1$Wing, objective.name = "Log-Likelihood",optimize = TRUE)$lambda
+```
+
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L1, data = data.no.outlier.1)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Remove outliers (1), SW Transformation
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L2, data = data.no.outlier.1)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Remove outliers (1), Log Likelihood Transformation
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L3, data = data.no.outlier.1)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Remove outliers (2) and PPCC Transformation
+```{r}
+# All transformations considered
+#QQplot
+L1 <- EnvStats::boxcox(model.no.outlier.2, objective.name = "PPCC", optimize = TRUE)$lambda
+#Shapiro-Wilks
+L2 <- EnvStats::boxcox(model.no.outlier.2, objective.name = "Shapiro-Wilk", optimize = TRUE)$lambda
+L3 <- EnvStats::boxcox(data.no.outlier.2$Wing, objective.name = "Log-Likelihood",optimize = TRUE)$lambda
+```
+
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L1, data = data.no.outlier.2)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Remove outliers (2), SW Transformation
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L2, data = data.no.outlier.2)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Remove outliers (2), Log Likelihood Transformation
+```{r}
+# Get summary of this model
+t.model <- give.me.t.model(L3, data = data.no.outlier.2)
+summary(t.model)
+```
+
+## Get QQ Plot
+```{r}
+car::qqPlot(t.model$residuals,
+id = FALSE # remove point identification
+)
+```
+
+## Test for normality
+```{r}
+the.SWtest = shapiro.test(t.model$residuals)
+the.SWtest
+```
+
+## Plot variances
+```{r}
+# Homogeneity of variances
+plot(t.model, which = 3)
+```
+
+## Test for const variance
+```{r}
+# Levene test
+car::leveneTest(t.model)
+```
+
+# Conclusion
+There are no good combination of transformed variables, since for any combination of outlier removal and transformation, we will result with either non-normal data or unequal variance or both.

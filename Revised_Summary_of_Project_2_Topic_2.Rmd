@@ -1,0 +1,217 @@
+---
+title: "Revised Summary of Project 2 Topic 2"
+author: "Sam. M"
+date: "2024-03-05"
+output:
+  word_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# II. Summary
+
+It is important to understand and summarize the data to conduct an insightful analysis of the relationship between annual salaries among different professions and regions. By interpreting the sampled annual salary data, we can examine important measurements through statistical tables, and visualize the distribution of the data through plots. Overall allowing the discovery of trends that can not be seen just by looking at data alone.
+
+In this section, we will summarize the randomly sampled and observed annual salary data according to its general distribution, distribution by category, and distribution among categories.
+
+## II-1 Overall Distribution of Sample Data
+
+Looking at the overall distribution of the Annual salary sample data allows us to grasp a general trend of the data distribution.
+
+To interpret the numerical values (Annual Salary), the data can be plotted into a histogram to visualize the variability of the overall sample population (Figure 2.1).
+
+**Figure 2.1**
+
+![](Overall%20data%20Histogram.png){width="700"}
+
+Figure 2.1 sorts the overall sample population (120 data points) by the frequency of the annual salary according to a range. Each bar has a bin size of 11, meaning that each bar represents a range of \$11,000. Hence, the y-axis represents the frequency of a salary every \$11,000. The highest frequency (the mode) of around 27 people tends to occur around the range of \$94,000-105,000, which also consists of the mean. The lowest frequency of around 1 person occurs at the smallest salary of \~\$50,000-\$61,000. These values, along with the general symmetry of the data above allow us to assume that the distribution of Salary is almost normal, with a slight left tail. This could mean that the average person for all professions and regions in our sample tends to earn a bit more than \$100,000.
+
+While a Histogram gives us a general visualization of the salary distribution, it does not do well to give a more accurate representation of the symmetry if there are outlier's.
+
+Analysis of the overall distribution of salary through a box plot helps clarify the symmetry of the data as it omits the outlier's and sees the spread of the data majority.
+
+**Figure 2.2**
+
+![](Overall%20Data%20Boxplot.png){width="700"}
+
+Figure 2.2 shows that the sample population does not consist of any outlier's (numerically distant points). Giving a further indication of its relatively normal distribution. The lower 25% whisker of \~\$60-84 thousand is smaller than the upper 25% whisker of \~\$112.5-140 thousand, giving evidence of a slight left tail. The middle 50% (Interquartile range) has a slight left skew where the median is bigger than the mean. However, the interquartile range stays relatively in the middle. Meaning that the data has a relatively normal distribution.
+
+In summary, through a general analysis of the annual salaries without taking different categories into account, it can be concluded that the data has an almost normal distribution with no outlier's and a higher bias towards the right (higher salary).
+
+## II-2 Distribution of Annual Salary by Category
+
+While the data above gave us a general idea of the distribution of the data, it does not tell us the distribution of data within each group. Conducting further observations of the data distribution according to each group per category allows us to analyze how each category has an impact on salary distribution.
+
+The Salary Data Set is Distributed into 2 categories:
+
+-   **Profession:** With groups DS (Data-Scientist), SE (Software-Engineer), BE (Bioinformatics Engineer)
+
+-   **Region:** With groups SF (San Francisco), S (Seattle)
+
+**Figure 2.3**
+
+![](Profession%20Data%20Boxplot.png){width="700"}
+
+Figure 2.3 structures the Annual Salary of each worker by their profession. Based on the medians of each profession, Bioinformatics Engineers tend to earn the lowest and Data Scientists tend to earn the highest. The interquartile range further suggest the approximate normality of the data. However, it can be noted that majority of Data-Scientists tend to earn more than the median, and that one bioinformatic engineer tends to earn a lower salary than the sampled data of bioinformatic engineers. However, these points will not majorly effect our data.
+
+The highest variability in salary occurs among Data Scientists and Bioinformatics engineers, in which the right tailed-bias (smaller left-whisker and bigger right-whisker) along with the symmetry in IQR suggests that the average salary per worker (mean) is higher than the median.
+
+**Figure 2.4**
+
+![](Region%20Data%20Boxplot.png){width="700"}Figure 2.4 structures the annual salary per worker by the region they are in. While the median salary for workers in San Francisco appears to be higher than workers in Seattle, they are not beyond the bounds of the other regions IQR. Suggesting that it may be an insignificant difference. Therefore the interquartile range may further suggest the approximate normality of the data.
+
+**Figure 2.5**
+
+| Profession         | BE    | DS     | SE    |
+|--------------------|-------|--------|-------|
+| Standard Deviation | 9.67  | 13.67  | 13.24 |
+| **Region**         | **S** | **SF** |       |
+| Standard Deviation | 17.42 | 19.30  |       |
+
+An analysis of standard deviations allows us to understand the variability of each group from the overall mean. Overall, the salaries by group tend to vary by \$9.67-\$19.30 per worker, which is 10%-19% of the overall average annual salary per worker. The difference in standard deviations show that the sample variances have a roughly constant variance within each category. Which is crucial for conducting further ANOVA testing.
+
+## II-3 Distribution of Annual Salary among categories
+
+To simplify the interpretation, the categories will be referred to as Factors.
+
+-   **Factor A:** Profession, with values Data Scientist (DS), Software Engineer (SE), and Bioinformatics Engineer (BE)
+
+-   **Factor B:** Region, with values San Francisco (SF) and Seattle (S)
+
+Looking at the Factors through an interaction plot can help visualize how region and profession interact to effect the average annual salary of a worker.
+
+**Figure 2.6**
+
+![](Interaction%20Plot.png){width="700"}Figure 2.6 is an interaction plot that helps visualize a possible interaction effect. This can be seen as the slopes of SF and S do not run parallel to each other from BE to DS and DS to SE. Additionally, the steeper (bigger) slope between DS and SE in Seattle compared to San Francisco suggests that the difference in pay between data scientists and software engineers is a lot larger in Seattle than San Francisco, possibly meaning an interaction.
+
+Comparing pairwise differences, it it seen that there is a larger difference in salaries (income gap) for software engineers in both regions as compared to the other 2 professions. This observation could mean that there is a higher demand for Software engineers in San Francisco than in Seattle, and that there is an interaction effect which we can further analyze in our analysis.
+
+While the interaction plot helps with a visual understanding, a numerical perspective of the interaction between Factor A and B on Average annual salary is needed for more detailed analysis. A summary of mean values helps with this.
+
+**Figure 2.7**
+
+|                 | BE         | DS          | SE          | Group Means |
+|-----------------|------------|-------------|-------------|-------------|
+| **S**           | 79.75 (20) | 112.53 (20) | 95.55 (20)  | 95.94 (60)  |
+| **SF**          | 82.42(20)  | 117.77 (20) | 110.26 (20) | 103.48 (60) |
+| **Group Means** | 81.09(40)  | 115.15 (40) | 102.91 (40) | 99.71 (120) |
+
+Figure 2.6 sorts each factor (A,B) by their average mean salary, and the value in parentheses shows the sample size of each interaction. Data Scientists in San Francisco tend to have the highest salary while Bioinformatics Engineers in Seattle tend to have the lowest. As all sample sizes are equal, it eliminates the possibility of a weightage bias in the overall factor mean.
+
+Comparing pairwise differences of the individual Factor B (region) samples to the overall Factor B mean, we can see that there is not a significant difference in average salary for Bioinformatic Engineers and Data Scientists in a given region. With a difference ranging from \$1.33-1.34 thousand for Bioinformatic Engineers, and \$2.62 thousand for DS. However, software engineers have a \$7.35-7.36 thousand difference in Salary depending on what region they work in. Meaning that Factor B may not have a major impact on salary except for Software Engineers. As for comparing individual means of factor A (Profession) to the overall mean of factor A, we can see that there is a significant difference in average salary depending on the profession. With a range of \$0.39-16.59 thousand for workers in Seattle, and \$6.78-21.06 thousand for workers in San Francisco. This further gives evidence of a possible interaction effect, with factor A having a stronger impact than factor B. However, tests with formal models is needed to conclude an interaction.
+
+## II-4 Summary
+
+In summary, the overall salary distribution appears to be relatively normal distributed. The average Salary per worker tends to be higher among the group of Data Scientists and workers in San Francisco, and the highest among Data Scientists in San Francisco. There appears to be an interaction effect between Region and Profession, with higher variability within Software Engineers.
+
+While this section gave a relative understanding of the distribution of Annual salary per category, an analysis through formal models and methods is required to make a more accurate conclusion.
+
+# Summary Code
+
+### Understanding the Overall Numerical Data
+
+```{r}
+Salary <- read.csv("C:/Users/samri/Downloads/Salary.csv")
+library(ggplot2)
+
+#Histogram
+ggplot(Salary, aes(x = Annual)) + geom_histogram(binwidth = 11,color = "black",fill = "white")+xlab("Annual Salary (In tens of Thousands)") +ggtitle("Histogram - Overall Distribution Annual Salary")
+
+#Box-plot
+ggplot(Salary,aes(y=Annual))+geom_boxplot()+coord_flip()+ylab("Annual Salary (In tens of Thousands)")+ggtitle("Boxplot - Overall Distribution Annual Salary")
+```
+
+### Understanding the Numerical data by each category
+
+```{r}
+
+# Profession Box-plot
+ggplot(Salary,aes(y=Annual, x=Prof))+geom_boxplot()+coord_flip() +ylab("Annual Salary (In tens of Thousands)")+xlab("Profession")+ggtitle("Boxplot - Distribution of Annual Salary by Profession")
+
+# Region Box-plot
+ggplot(Salary,aes(y=Annual, x=Region))+geom_boxplot()+coord_flip()+ylab("Annual Salary (In tens of Thousands)")+xlab("Region")+ggtitle("Boxplot - Distribution of Annual Salary by Region")
+
+# Group Variance Table
+groupProf.sds = by(Salary$Annual,Salary$Prof,sd)
+the.summary = rbind(groupProf.sds)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(groupProf.sds)
+rownames(the.summary) = c("Std. Dev")
+the.summary
+
+groupRegion.sds = by(Salary$Annual,Salary$Region,sd)
+the.summary = rbind(groupRegion.sds)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(groupRegion.sds)
+rownames(the.summary) = c("Std. Dev")
+the.summary
+```
+
+### Understanding the Numerical data among each category
+
+```{r}
+#to find the group mean and sample size
+
+#By Profession
+group.means = by(Salary$Annual,Salary$Prof,mean)
+group.nis = by(Salary$Annual,Salary$Prof,length)
+the.summary = rbind(group.means,group.nis)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(group.means)
+rownames(the.summary) = c("Means","Sample Size")
+the.summary  
+
+#By Region
+group.means = by(Salary$Annual,Salary$Region,mean)
+group.nis = by(Salary$Annual,Salary$Region,length)
+the.summary = rbind(group.means,group.nis)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(group.means)
+rownames(the.summary) = c("Means","Sample Size")
+the.summary
+
+#Understanding the Sample size distribution per sample group
+two.way = table(Salary$Prof,Salary$Region)
+mosaicplot(two.way, main = "Gear vs AM")
+
+#To find the Sample Means Per group
+
+the.data = Salary
+names(the.data) = c("Y","A","B")
+
+find.means = function(the.data,fun.name = mean){
+  a = length(unique(the.data[,2]))
+  b = length(unique(the.data[,3]))
+  means.A = by(the.data[,1], the.data[,2], fun.name)
+  means.B = by(the.data[,1],the.data[,3],fun.name)
+  means.AB = by(the.data[,1],list(the.data[,2],the.data[,3]),fun.name)
+  MAB = matrix(means.AB,nrow = b, ncol = a, byrow = TRUE)
+  colnames(MAB) = names(means.A)
+  rownames(MAB) = names(means.B)
+  MA = as.numeric(means.A)
+  names(MA) = names(means.A)
+  MB = as.numeric(means.B)
+  names(MB) = names(means.B)
+  MAB = t(MAB)
+  results = list(A = MA, B = MB, AB = MAB)
+  return(results)
+}
+
+all.means <- find.means(the.data)
+the.means <- data.frame(all.means$AB)
+the.means$Avg <- all.means$A
+the.means <- rbind(the.means, Avg = c(unlist(all.means$B), "NA"))
+the.means
+
+#To find the Group Mean
+mean(Salary$Annual)
+
+#Interaction Plot
+interaction.plot(Salary$Prof, Salary$Region, Salary$Annual)
+```
+
+```{r pressure, echo=FALSE}
+```
