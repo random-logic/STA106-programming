@@ -1,2 +1,2 @@
-input <- "HW6.Rmd"
-rmarkdown::render(input, output_format = "pdf_document")
+input <- "Project2-Trans.Rmd"
+rmarkdown::render(input, output_format = "html_document")
