@@ -1,0 +1,117 @@
+# II. Summary
+
+It is important to understand and summarize the data to conduct an insightful analysis of the relationship between annual salaries among different professions and regions. By interpreting the sampled annual salary data, we can examine important measurements through statistical tables, and visualize the distribution of the data through plots. Overall allowing the discovery of trends that can not be seen just by looking at data alone.
+
+In this section, we will summarize the randomly sampled and observed annual salary data according to its general distribution, distribution by category, and distribution among categories.
+
+## II-1 Overall Distribution of Sample Data
+
+Looking at the overall distribution of the Annual salary sample data allows us to grasp a general trend of the data distribution.
+
+To interpret the numerical values (Annual Salary), the data can be plotted into a histogram to visualize the variability of the overall sample population (Figure 2.1).
+
+**Figure 2.1**
+
+![](Overall%20data%20Histogram.png){width="700"}
+
+Figure 2.1 sorts the overall sample population (120 data points) by the frequency of the annual salary according to a range. Each bar has a bin size of 11, meaning that each bar represents a range of \$11,000. Hence, the y-axis represents the frequency of a salary every \$11,000. The highest frequency (the mode) of around 27 people tends to occur around the range of around \$94,000-105,000, which also consists of the mean. The lowest frequency of around 1 person occurs at the smallest salary of around \$50,000-\$61,000. These values, along with the general symmetry of the data above allow us to assume that the distribution of Salary is almost normal, with a slight left tail. This could mean that the average person for all professions and regions in our sample tends to earn a bit more than \$100,000.
+
+While a Histogram gives us a general visualization of the salary distribution, it does not do well to give a more accurate representation of the symmetry if there are outlier's.
+
+Analysis of the overall distribution of salary through a box plot helps clarify the symmetry of the data as it omits the outlier's and sees the spread of the data majority.
+
+**Figure 2.2**
+
+![](Overall%20Data%20Boxplot.png){width="700"}
+
+Figure 2.2 shows that the sample population does not consist of any outlier's (numerically distant points). Giving a further indication of its relatively normal distribution. The lower 25% whisker of \~\$60-84 thousand is smaller than the upper 25% whisker of around \$112.5-140 thousand, giving evidence of a slight left tail. The middle 50% (Interquartile range) has a slight left skew where the median is bigger than the mean. However, the interquartile range stays relatively in the middle. Meaning that the data has a relatively normal distribution.
+
+In summary, through a general analysis of the annual salaries without taking different categories into account, it can be concluded that the data has an almost normal distribution with no outlier's and a slight bias towards the right (higher salary).
+
+## II-2 Distribution of Annual Salary by Category
+
+While the data above gave us a general idea of the distribution of the data, it does not tell us the distribution of data within each group. Conducting further observations of the data distribution according to each group per category allows us to analyze how each category has an impact on salary distribution.
+
+The Salary Data Set is Distributed into 2 categories:
+
+-   **Profession:** With groups DS (Data-Scientist), SE (Software-Engineer), BE (Bioinformatics Engineer)
+
+-   **Region:** With groups SF (San Francisco), S (Seattle)
+
+**Figure 2.3**
+
+![](Profession%20Data%20Boxplot.png){width="700"}
+
+Figure 2.3 structures the Annual Salary of each worker by their profession. Based on the medians of each profession, Bioinformatics Engineers tend to earn the lowest and Data Scientists tend to earn the highest. The interquartile range further suggest the approximate normality of the data. However, it can be noted that majority of Data-Scientists tend to earn more than the median, and that one bioinformatic engineer tends to earn a lower salary than the sampled data of bioinformatic engineers. However, these points will not majorly affect our data.
+
+The highest variability in salary occurs among Data Scientists and Bioinformatics engineers, in which the right tailed-bias (smaller left-whisker and bigger right-whisker) along with the symmetry in IQR suggests that the average salary per worker (mean) is higher than the median.
+
+**Figure 2.4**
+
+![](Region%20Data%20Boxplot.png){width="700"}
+
+Figure 2.4 structures the annual salary per worker by the region they are in. While the median salary for workers in San Francisco appears to be higher than workers in Seattle, they are not beyond the bounds of the other regions IQR. Suggesting that it may be an insignificant difference. Therefore the interquartile range may further suggest the approximate normality of the data, which we will analyze further in the analysis section.
+
+## II-3 Mean distribution of Annual Salary among categories
+
+### II-3.1 Analysis of sample means
+
+To further understand the interaction between the numerical values (annual salary), and the categorical values (Profession and Region), a interaction plot and a summary of mean values can be looked at.
+
+To simplify the interpretation, the categories will be referred to as Factors.
+
+-   **Factor A:** Profession, with values Data Scientist (DS), Software Engineer (SE), and Bioinformatics Engineer (BE)
+
+-   **Factor B:** Region, with values San Francisco (SF) and Seattle (S)
+
+**Figure 2.5**
+
+|                 | BE         | DS          | SE          | Group Means |
+|-----------------|------------|-------------|-------------|-------------|
+| **S**           | 79.75 (20) | 112.53 (20) | 95.55 (20)  | 95.94 (60)  |
+| **SF**          | 82.42(20)  | 117.77 (20) | 110.26 (20) | 103.48 (60) |
+| **Group Means** | 81.09(40)  | 115.15 (40) | 102.91 (40) | 99.71 (120) |
+
+Figure 2.5 sorts each factor (A,B) by their average mean salary, and the value in parentheses shows the sample size of each interaction. Data Scientists in San Francisco tend to have the highest salary while Bioinformatics Engineers in Seattle tend to have the lowest. As all sample sizes are equal, it eliminates the possibility of a weightage bias in the overall factor mean.
+
+When comparing the factor means to the overall sample mean, we can see that there is a bigger difference in worker salary when it comes to profession more than region. The difference ranges from \$3.2-18.62 thousand according to profession and ±\$3.77 thousand according to region.
+
+Comparing pairwise differences of the individual Factor B (region) samples to the overall Factor B mean, we can see that there is not a significant difference in average salary for Bioinformatic Engineers and Data Scientists in a given region. With a difference ranging from \$1.33-1.34 thousand for Bioinformatic Engineers, and ±\$2.62 thousand for DS. However, software engineers have a \$7.35-7.36 thousand difference in Salary depending on what region they work in. Meaning that Factor B may not have a major impact on salary except for Software Engineers. As for comparing individual means of factor A (Profession) to the overall mean of factor A, we can see that there is a significant difference in average salary depending on the profession. With a range of \$0.39-16.59 thousand for workers in Seattle, and \$6.78-21.06 thousand for workers in San Francisco. This gives evidence of a possible interaction effect, with factor A having a stronger impact than factor B. However, further analysis testing through formal models is needed to conclude an interaction.
+
+While the summary of mean values gives a numerical perspective of the sample salary distribution among workers according to profession and region, looking at the factors through an interaction plot is an informal method to gain a visual perspective on how profession and region interact to effect the average annual salary of a worker. It could also give further evidence of a possible interaction effect between both factors.
+
+**Figure 2.6**
+
+![](Interaction%20Plot.png){width="700"}
+
+As seeen in Figure 2.6, the interaction plot further suggests a possible interaction effect between Profession and region. This can be seen as the slopes of SF and S do not run parallel to each other from BE to DS and DS to SE. Additionally, the steeper (bigger) slope between DS and SE in Seattle compared to San Francisco suggests that the difference in pay between data scientists and software engineers is a lot larger in Seattle than San Francisco, possibly meaning an interaction.
+
+Comparing pairwise differences, it it seen that there is a larger difference in salaries (income gap) for software engineers in both regions as compared to the other 2 professions. This observation could mean that there is a higher demand for Software engineers in San Francisco than in Seattle, and that there is an interaction effect which we can further analyze in our analysis.
+
+### II-3.2 Analysis of group variances
+
+**Figure 2.7**
+
+**Overall (Sample) Standard Deviation -** 18.70
+
+| **Profession**     | **BE** | **DS** | **SE** |
+|--------------------|--------|--------|--------|
+| Standard Deviation | 9.67   | 13.67  | 13.24  |
+| **Region**         | **S**  | **SF** |        |
+| Standard Deviation | 17.42  | 19.30  |        |
+
+An analysis of group standard deviations allows us to understand the spread of each group from its group mean. Where a lower spread (standard deviation) indicates the group values are denser near the mean. Overall, the salaries by group tend to vary from \$9.67-\$19.30 thousand per worker, which is around 10%-19% of the overall average salary per worker.
+
+Through a comparison of the group standard deviations from the overall standard deviation, we can see that the standard deviation's for every group in the profession category is much lesser than the overall standard deviation compared to region. With a difference of 5.03-5.46 for profession and 0.6-1.28 for region from the overall standard deviation.
+
+The standard deviation further allows us to interpret the difference in means. Since the average salary of a data scientist is more than 3 standard deviations (around 3.52) away from a Bioinformatics Engineer average salary, it suggests a difference in average salary between data scientists and bioinformatics engineers as the spread is high. In the same manner, the average salary of a worker in San Francisco is less than 1 standard deviation (around 0.43) away from the average salary of a worker in Seattle, suggesting a possibility of a lower difference is sample means.
+
+In general, the difference in standard deviations among groups suggest that the sample have a roughly constant variance within each category. With a range of \$0.43-4 thousand among profession and \$1.88 thousand among region. Further diagnostic testing will be conducted to verify this.
+
+## II-4 Summary
+
+In summary, the relatively normal distribution of normal salary and the relatively constant standard deviation suggests that our ANOVA assumptions are met. Through an analysis of the factor means, it appears that the profession (factor A) of the worker has a stronger individual impact on annual salary than the region (factor B) the worker is in. Even so, there appears to be an interaction effect between both factors on annual salary, where profession affects the salary of all regions and region impacts the salary of Software Engineers but not any other profession.
+
+What could this mean.
+
+While this section gave a relative understanding of the distribution of Annual salary per category, an analysis through formal models and methods is required to make a more accurate conclusion.

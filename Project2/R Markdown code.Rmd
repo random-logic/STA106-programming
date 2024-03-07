@@ -1,0 +1,123 @@
+---
+title: "R Code for project"
+author: "Sam. M"
+date: "2024-03-07"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Summary Code
+
+### Understanding the Overall Numerical Data
+
+```{r}
+Salary <- read.csv("C:/Users/samri/Downloads/Salary.csv")
+library(ggplot2)
+
+#Histogram
+ggplot(Salary, aes(x = Annual)) + geom_histogram(binwidth = 11,color = "black",fill = "white")+xlab("Annual Salary (In tens of Thousands)") +ggtitle("Histogram - Overall Distribution Annual Salary")
+
+#Box-plot
+ggplot(Salary,aes(y=Annual))+geom_boxplot()+coord_flip()+ylab("Annual Salary (In tens of Thousands)")+ggtitle("Boxplot - Overall Distribution Annual Salary")
+```
+
+### Understanding the Numerical data by each category
+
+```{r}
+
+# Profession Box-plot
+ggplot(Salary,aes(y=Annual, x=Prof))+geom_boxplot()+coord_flip() +ylab("Annual Salary (In tens of Thousands)")+xlab("Profession")+ggtitle("Boxplot - Distribution of Annual Salary by Profession")
+
+# Region Box-plot
+ggplot(Salary,aes(y=Annual, x=Region))+geom_boxplot()+coord_flip()+ylab("Annual Salary (In tens of Thousands)")+xlab("Region")+ggtitle("Boxplot - Distribution of Annual Salary by Region")
+```
+
+### Understanding the Numerical data among each category
+
+```{r}
+#to find the group mean and sample size
+
+#By Profession
+group.means = by(Salary$Annual,Salary$Prof,mean)
+group.nis = by(Salary$Annual,Salary$Prof,length)
+the.summary = rbind(group.means,group.nis)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(group.means)
+rownames(the.summary) = c("Means","Sample Size")
+the.summary  
+
+#By Region
+group.means = by(Salary$Annual,Salary$Region,mean)
+group.nis = by(Salary$Annual,Salary$Region,length)
+the.summary = rbind(group.means,group.nis)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(group.means)
+rownames(the.summary) = c("Means","Sample Size")
+the.summary
+
+#Understanding the Sample size distribution per sample group
+two.way = table(Salary$Prof,Salary$Region)
+mosaicplot(two.way, main = "Gear vs AM")
+
+#To find the Sample Means Per group
+
+the.data = Salary
+names(the.data) = c("Y","A","B")
+
+find.means = function(the.data,fun.name = mean){
+  a = length(unique(the.data[,2]))
+  b = length(unique(the.data[,3]))
+  means.A = by(the.data[,1], the.data[,2], fun.name)
+  means.B = by(the.data[,1],the.data[,3],fun.name)
+  means.AB = by(the.data[,1],list(the.data[,2],the.data[,3]),fun.name)
+  MAB = matrix(means.AB,nrow = b, ncol = a, byrow = TRUE)
+  colnames(MAB) = names(means.A)
+  rownames(MAB) = names(means.B)
+  MA = as.numeric(means.A)
+  names(MA) = names(means.A)
+  MB = as.numeric(means.B)
+  names(MB) = names(means.B)
+  MAB = t(MAB)
+  results = list(A = MA, B = MB, AB = MAB)
+  return(results)
+}
+
+all.means <- find.means(the.data)
+the.means <- data.frame(all.means$AB)
+the.means$Avg <- all.means$A
+the.means <- rbind(the.means, Avg = c(unlist(all.means$B), "NA"))
+the.means
+
+#To find the Group Mean
+mean(Salary$Annual)
+
+#Interaction Plot
+interaction.plot(Salary$Prof, Salary$Region, Salary$Annual)
+
+# Group Variance Table
+groupProf.sds = by(Salary$Annual,Salary$Prof,sd)
+the.summary = rbind(groupProf.sds)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(groupProf.sds)
+rownames(the.summary) = c("Std. Dev")
+the.summary
+
+groupRegion.sds = by(Salary$Annual,Salary$Region,sd)
+the.summary = rbind(groupRegion.sds)
+the.summary = round(the.summary,digits = 4)
+colnames(the.summary) = names(groupRegion.sds)
+rownames(the.summary) = c("Std. Dev")
+the.summary
+
+sd(Salary$Annual)
+```
+
+```{r pressure, echo=FALSE}
+```
+
+
+```{r pressure, echo=FALSE}
+```
