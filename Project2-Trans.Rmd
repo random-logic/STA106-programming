@@ -10,6 +10,7 @@ output:
 
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
 ```
 
 # A.1 INTRODUCTION
@@ -35,6 +36,12 @@ the.model <- lm(Wing ~ Species, data = the.data)
 model.fit <- aov(Wing ~ Species,
   data = the.data
 )
+
+# Set size of all plots
+options(
+  repr.plot.width = 4,  # Width of the plot in inches
+  repr.plot.height = 3  # Height of the plot in inches
+)
 ```
 
 ## B.1.2 Original Data Overview
@@ -43,39 +50,78 @@ library("ggplot2")
 ggplot(the.data, aes(x = Wing, fill = Species)) +
   geom_histogram(binwidth = 10, color = "black", fill = "white") +
   facet_grid(Species ~ .) +
-  labs(title = "Figure 1.1 Histogram of Wing Feather Length by Group")
+  labs(title = "Figure 1.1.1 Histogram of Wing Feather Length by Group")
 ```
 
-We will first assess normality and check if our data does not violate this assumption. We can briefly observe our data using histograms of wing feather length by group and looking at the curve. Figure 1.1 shows histograms that show the distribution of hawk feather length by species. It suggests that the normality assumption may be violated for the Cooper's and Sharp-Shinned Hawks. However, for the Red-tailed Hawks, the data is approximately normal. The constant variance assumption also seems to be violated, as the spread for all three groups appear different.
+We will first assess normality and check if our data does not violate this assumption. We can briefly observe our data using histograms of wing feather length by group and looking at the curve. Figure 1.1.1 shows histograms that show the distribution of hawk feather length by species. It suggests that the normality assumption may be violated for the Cooper's and Sharp-Shinned Hawks. However, for the Red-tailed Hawks, the data looks approximately normal.
+
+```{r}
+ei = model.fit$residuals
+boxplot(ei ~ Species, data = the.data,
+        main = "Figure 1.1.2 Box Plot of Different Species")
+```
+
+We will now assess outliers and variance. Figure 1.1.2 shows that we have outliers. These outliers can affect our normality distribution and variance of our groups. While our variances appear approximately constant in this figure, this may not be the case due to the outliers. We cannot conclude without doing formal testing.
 
 ## B.1.2 Normality of data
 ```{r}
 car::qqPlot(model.fit$residuals,
-  id = FALSE # remove point identification
+  id = FALSE,
+  main = "Figure 1.2 QQ Plot of Original Data"
 )
 ```
+
+We can also speculate our normality assumption by fitting our model into a QQ plot that compares the quantiles of residuals against the quantiles of a normal theoretical distribution. Figure 1.2 shows the QQ plot as a "non-normal" plot with small and large outliers. This is not a conclusive test, so we will run the Shapiro-Wilks test as a formal test.
 
 ```{r}
 the.SWtest = shapiro.test(model.fit$residuals)
 p_value <- round(the.SWtest$p.value, 4)
 ```
 
-# Do plot for variance
+We use the Shapiro-Wilks test in R to quantitatively assess the normality of our model. Our null hypothesis is that the residuals of our data are normally distributed. Our alternative hypothesis is that they are not normally distributed. We got a p-value of $`r p_value`$, and this value is less than a significance value of 0.1. Therefore, we reject the null hypothesis and conclude that the values of the residuals are non-normal. This test allows us to claim that the original data is not normally distributed.
+
+## B.1.3 Constant Variance
 ```{r}
-plot(model.fit, which = 3)
+plot(model.fit, which = 3, main = "Figure 1.3 Error Plot of Original Data")
 ```
 
-# Do test for const variance
+In figure 1.3, the variances between groups also appear equal. However, this can easily not be the case as the outliers are heavily affecting the variance for two groups. It is clear that if we remove the outliers, the variances will no longer appear equal.
+
 ```{r}
-car::leveneTest(model.fit)
+levene_test <- car::leveneTest(model.fit)
+p_value <- round(levene_test[1, 3], 4)
 ```
 
-# Transformation Possibilities
+We can run the Brown-Forsythe test in R to claim to test the assumption for constant variance. Our null hypothesis is that all group variances are equal while our alternative is that at least one group variance is not equal. We calculated a p-value of `r p_value` which is less than a significance value of 0.1. We reject the null and we can conclude that not all group variances are equal. Therefore, the constant variance assumption is also not met for our model.
+
+# C Outlier Removal and Transformation
+We will consider all possible box cox transformations and outlier removal techniques to better fit our model.
+
+## C.1 Transformation Possibilities
+We will consider the following box-cox transformations: 
+
 1. PPCC
 2. Shapiro-Wilks
-3. Log-Likelihood 
-4. 
+3. Log-Likelihood
+
 ```{r}
+# p-vals
+p_value_sw_test <- data.frame(
+  NoOutlierRemoval = c(-1, -1, -1, -1),
+  OutlierRemovalViaBoxPlot = c(-1, -1, -1, -1),
+  OutlierRemovalViaStudentizedResiduals = c(-1, -1, -1, -1)
+)
+
+p_value_bf_test <- data.frame(
+  NoOutlierRemoval = c(-1, -1, -1, -1),
+  OutlierRemovalViaBoxPlot = c(-1, -1, -1, -1),
+  OutlierRemovalViaStudentizedResiduals = c(-1, -1, -1, -1)
+)
+
+# Name the rows
+rownames(p_value_sw_test) <- c("No Transformation","PPCC", "Shapiro-Wilks", "Log-Likelihood")
+rownames(p_value_bf_test) <- c("No Transformation","PPCC", "Shapiro-Wilks", "Log-Likelihood")
+
 # All transformations considered
 #QQplot
 L1 <- EnvStats::boxcox(model.fit, objective.name = "PPCC", optimize = TRUE)$lambda
@@ -84,8 +130,10 @@ L2 <- EnvStats::boxcox(model.fit, objective.name = "Shapiro-Wilk", optimize = TR
 L3 <- EnvStats::boxcox(the.data$Wing, objective.name = "Log-Likelihood",optimize = TRUE)$lambda
 ```
 
-# No outlier removal, PPCC Transformation
+## C.1.1 No outlier removal, PPCC Transformation
 ```{r}
+par(mfrow = c(1, 2))
+
 # The transformation function to get transformed model
 give.me.t.model <- function(L, data = the.data) {
   YT = (data$Wing^(L) - 1) / L
@@ -98,20 +146,20 @@ give.me.t.model <- function(L, data = the.data) {
 ```{r}
 # Get summary of this model
 t.model <- give.me.t.model(L1)
-summary(t.model)
+# summary(t.model)
 ```
 
-## Get QQ Plot
 ```{r}
 car::qqPlot(t.model$residuals,
-id = FALSE # remove point identification
+  id = FALSE,
+  main = "QQPlot"
 )
 ```
 
 ## Test for normality
 ```{r}
 the.SWtest = shapiro.test(t.model$residuals)
-the.SWtest
+p_value_sw_test$NoOutlierRemoval[1] <- round(the.SWtest$p.value, 4)
 ```
 
 ## Plot variances
@@ -123,7 +171,8 @@ plot(t.model, which = 3)
 ## Test for const variance
 ```{r}
 # Levene test
-car::leveneTest(t.model)
+levene_test = car::leveneTest(t.model)
+p_value <- round(levene_test[1, 3], 4)
 ```
 
 # No outlier removal, Log Likelihood Transformation
@@ -143,7 +192,7 @@ id = FALSE # remove point identification
 ## Test for normality
 ```{r}
 the.SWtest = shapiro.test(t.model$residuals)
-the.SWtest
+p_value_sw_test$NoOutlierRemoval[2] <- round(the.SWtest$p.value, 4)
 ```
 
 ## Plot variances
@@ -175,7 +224,7 @@ id = FALSE # remove point identification
 ## Test for normality
 ```{r}
 the.SWtest = shapiro.test(t.model$residuals)
-the.SWtest
+p_value_sw_test$NoOutlierRemoval[3] <- round(the.SWtest$p.value, 4)
 ```
 
 ## Plot variances
@@ -267,7 +316,7 @@ car::qqPlot(t.model$residuals,
 ## Test for normality
 ```{r}
 the.SWtest = shapiro.test(t.model$residuals)
-the.SWtest
+p_value_sw_test$OutlierRemovalViaBoxPlot[1] <- round(the.SWtest$p.value, 4)
 ```
 
 ## Plot variances
@@ -308,7 +357,7 @@ id = FALSE # remove point identification
 ## Test for normality
 ```{r}
 the.SWtest = shapiro.test(t.model$residuals)
-the.SWtest
+p_value_sw_test$OutlierRemovalViaBoxPlot[2] <- round(the.SWtest$p.value, 4)
 ```
 
 ## Plot variances
@@ -340,7 +389,7 @@ id = FALSE # remove point identification
 ## Test for normality
 ```{r}
 the.SWtest = shapiro.test(t.model$residuals)
-the.SWtest
+p_value_sw_test$OutlierRemovalViaBoxPlot[3] <- round(the.SWtest$p.value, 4)
 ```
 
 ## Plot variances
