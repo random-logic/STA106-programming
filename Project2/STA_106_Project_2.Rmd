@@ -1,16 +1,7 @@
----
-title: "HW X"
-author: "Andrew Jowe"
-output:
-  html_document:
-    df_print: kable
-  pdf_document:
-    df_print: kable
----
-
 # I Introduction
 ```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
 ```
 
 ```{r}
@@ -66,7 +57,9 @@ To interpret the numerical values (Annual Salary), the data can be plotted into 
 
 **Figure 2.1**
 
-![](Overall%20data%20Histogram.png){width="700"}
+![](Overall%20data%20Histogram.png){width="400"}
+
+
 
 Figure 2.1 sorts the overall sample population (120 data points) by the frequency of the annual salary according to a range. Each bar has a bin size of 11, meaning that each bar represents a range of \$11,000. Hence, the y-axis represents the frequency of a salary every \$11,000. The highest frequency (the mode) of around 27 people tends to occur around the range of around \$94,000-105,000, which also consists of the mean. The lowest frequency of around 1 person occurs at the smallest salary of around \$50,000-\$61,000. These values, along with the general symmetry of the data above allow us to assume that the distribution of Salary is almost normal, with a slight left tail. This could mean that the average person for all professions and regions in our sample tends to earn a bit more than \$100,000.
 
@@ -76,7 +69,9 @@ Analysis of the overall distribution of salary through a box plot helps clarify 
 
 **Figure 2.2**
 
-![](Overall%20Data%20Boxplot.png){width="700"}
+![](Overall%20Data%20Boxplot.png){width="400"}
+
+
 
 Figure 2.2 shows that the sample population does not consist of any outlier's (numerically distant points). Giving a further indication of its relatively normal distribution. The lower 25% whisker of \~\$60-84 thousand is smaller than the upper 25% whisker of around \$112.5-140 thousand, giving evidence of a slight left tail. The middle 50% (Interquartile range) has a slight left skew where the median is bigger than the mean. However, the interquartile range stays relatively in the middle. Meaning that the data has a relatively normal distribution.
 
@@ -94,7 +89,9 @@ The Salary Data Set is Distributed into 2 categories:
 
 **Figure 2.3**
 
-![](Profession%20Data%20Boxplot.png){width="700"}
+![](Profession%20Data%20Boxplot.png){width="400"}
+
+
 
 Figure 2.3 structures the Annual Salary of each worker by their profession. Based on the medians of each profession, Bioinformatics Engineers tend to earn the lowest and Data Scientists tend to earn the highest. The interquartile range further suggest the approximate normality of the data. However, it can be noted that majority of Data-Scientists tend to earn more than the median, and that one bioinformatic engineer tends to earn a lower salary than the sampled data of bioinformatic engineers. However, these points will not majorly affect our data.
 
@@ -102,7 +99,9 @@ The highest variability in salary occurs among Data Scientists and Bioinformatic
 
 **Figure 2.4**
 
-![](Region%20Data%20Boxplot.png){width="700"}
+![](Region%20Data%20Boxplot.png){width="400"}
+
+
 
 Figure 2.4 structures the annual salary per worker by the region they are in. While the median salary for workers in San Francisco appears to be higher than workers in Seattle, they are not beyond the bounds of the other regions IQR. Suggesting that it may be an insignificant difference. Therefore the interquartile range may further suggest the approximate normality of the data, which we will analyze further in the analysis section.
 
@@ -136,7 +135,9 @@ While the summary of mean values gives a numerical perspective of the sample sal
 
 **Figure 2.6**
 
-![](Interaction%20Plot.png){width="700"}
+![](Interaction%20Plot.png){width="400"}
+
+
 
 As seeen in Figure 2.6, the interaction plot further suggests a possible interaction effect between Profession and region. This can be seen as the slopes of SF and S do not run parallel to each other from BE to DS and DS to SE. Additionally, the steeper (bigger) slope between DS and SE in Seattle compared to San Francisco suggests that the difference in pay between data scientists and software engineers is a lot larger in Seattle than San Francisco, possibly meaning an interaction.
 
@@ -287,8 +288,10 @@ all.models = list(AB,A.B,A,B,N)
 SSE = t(as.matrix(sapply(all.models,function(M) sum(M$residuals^2))))
 colnames(SSE) = c("AB","(A+B)","A","B","Empty/Null")
 rownames(SSE) = "SSE"
-round(data.frame(SSE), 4)
+knitr::kable(round(data.frame(SSE), 4))
 ```
+
+
 
 **Figure 4.1.2**
 
@@ -304,11 +307,13 @@ get.Partial.R2 = function(small.model,big.model){
 the.partial.R2 <- data.frame(get.Partial.R2(A.B, AB), get.Partial.R2(A, A.B),
                                get.Partial.R2(B, A.B), get.Partial.R2(N, A),
                                get.Partial.R2(N, B))
-colnames(the.partial.R2) <- c("$R^2(AB|(A+B))$", "$R^2((A+B)|A)$",
-                              "$R^2((A+B)|B)$", "$R^2(A|Empty)$",
-                              "$R^2(B|Empty)$")
-round(the.partial.R2, 4)
+colnames(the.partial.R2) <- c("$R^2(AB\\mid (A+B))$", "$R^2((A+B)\\mid A)$",
+                              "$R^2((A+B)\\mid B)$", "$R^2(A\\mid Empty)$",
+                              "$R^2(B\\mid Empty)$")
+knitr::kable(round(the.partial.R2, 4))
 ```
+
+
 
 From figure 4.1.2, there seems to be a significant factor A effect since its $R^2$ value is large when adding it both to the empty model and the model with factor B. While the conditional $R^2$ may hint which factors may be significant, this is not a conclusive test.
 

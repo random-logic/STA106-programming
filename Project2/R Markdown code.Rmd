@@ -1,17 +1,6 @@
----
-title: "R Code for project"
-author: "Sam. M"
-date: "2024-03-07"
-output: word_document
----
-
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(include = FALSE)
 ```
-
-# Summary Code
-
-### Understanding the Overall Numerical Data
 
 ```{r}
 Salary <- read.csv("C:/Users/samri/Downloads/Salary.csv")
@@ -24,7 +13,6 @@ ggplot(Salary, aes(x = Annual)) + geom_histogram(binwidth = 11,color = "black",f
 ggplot(Salary,aes(y=Annual))+geom_boxplot()+coord_flip()+ylab("Annual Salary (In tens of Thousands)")+ggtitle("Boxplot - Overall Distribution Annual Salary")
 ```
 
-### Understanding the Numerical data by each category
 
 ```{r}
 
@@ -35,7 +23,6 @@ ggplot(Salary,aes(y=Annual, x=Prof))+geom_boxplot()+coord_flip() +ylab("Annual S
 ggplot(Salary,aes(y=Annual, x=Region))+geom_boxplot()+coord_flip()+ylab("Annual Salary (In tens of Thousands)")+xlab("Region")+ggtitle("Boxplot - Distribution of Annual Salary by Region")
 ```
 
-### Understanding the Numerical data among each category
 
 ```{r}
 #to find the group mean and sample size
@@ -120,4 +107,24 @@ sd(Salary$Annual)
 
 
 ```{r pressure, echo=FALSE}
+```
+
+# Appendix
+```{r appendix, results="asis", include = TRUE}
+# Get all the labels
+all_labels <- knitr::all_labels()
+
+# Print out code along with labels
+for (label in all_labels) {
+  if (label == "setup" || label == "appendix") {
+    next
+  }
+
+  code <- knitr::knit_code$get(label)
+
+  cat("\n")
+  cat("```r \n")
+  cat(code, sep = "\n")
+  cat("```\n")
+}
 ```
