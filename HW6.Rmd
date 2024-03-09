@@ -1,11 +1,6 @@
 ---
 title: "HW 6"
 author: "Andrew Jowe"
-output:
-  html_document:
-    df_print: kable
-  pdf_document:
-    df_print: kable
 ---
 
 ```{r setup, echo=FALSE}
@@ -16,6 +11,25 @@ knitr::opts_chunk$set(echo = FALSE)
 # Plus minus function
 plus.minus = function(value) {
   return(c(-value, value))
+}
+
+# Find means
+find.means = function(the.data,fun.name = mean){
+  a = length(unique(the.data[,2]))
+  b = length(unique(the.data[,3]))
+  means.A = by(the.data[,1], the.data[,2], fun.name)
+  means.B = by(the.data[,1],the.data[,3],fun.name)
+  means.AB = by(the.data[,1],list(the.data[,2],the.data[,3]),fun.name)
+  MAB = matrix(means.AB,nrow = b, ncol = a, byrow = TRUE)
+  colnames(MAB) = names(means.A)
+  rownames(MAB) = names(means.B)
+  MA = as.numeric(means.A)
+  names(MA) = names(means.A)
+  MB = as.numeric(means.B)
+  names(MB) = names(means.B)
+  MAB = t(MAB)
+  results = list(A = MA, B = MB, AB = MAB)
+  return(results)
 }
 
 # Give me multipliers
@@ -203,6 +217,108 @@ b. False. The multiplier used should be the smallest multiplier out of all the m
 c. False. These multipliers are used for creating confidence intervals that contrast means, not for finding the true population mean.
 d. True. The amount of parameters to estimate for the regression model is the same as the model we chose. In our case, we chose the no interaction model, which has $a + b - 1$ parameters.
 
+# I
+```{r I.a}
+data <- read.csv("Prog.csv")
+
+data.I.a <- subset(data, type == "Small")
+result <- t.test(data.I.a$days)
+conf_interval <- round(result$conf.int, 4)
+```
+a. The $95\%$ confidence interval for $\mu_{1.}$ is $[`r conf_interval[1]`, `r conf_interval[2]`]$.
+```{r I.b}
+alpha <- 0.1
+
+n <- nrow(data)
+a <- length(unique(data$type))
+b <- length(unique(data$years))
+
+names(data) = c("Y","A","B")
+AB = lm(Y ~ A * B, data)
+SSE <- AB$residuals ^ 2
+dfSSE <- n - a * b
+MSE <- SSE / dfSSE
+
+the.mult <- find.mult(alpha, a, b, dfSSE, 1, "B")[2]
+
+# Note - j = 1 and j = 3 are flipped here due to how the problem is worded
+# Here, j = 1 represents New, j = 3 represents Exp
+# On the problem, j = 1 represents Exp, j = 3 represents New
+CI.1 <- give.me.CI(data, MSE, equal.weights = TRUE, the.mult, "B", c(0, -1, 1))
+CI.1 <- round(CI.1, 4)
+
+CI.2 <- give.me.CI(data, MSE, equal.weights = TRUE, the.mult, "B", c(-1, 0, 1))
+CI.2 <- round(CI.2, 4)
+```
+b. The $90\%$ confidence interval for $\mu_{.1} - \mu_{.2}$ is $[`r CI.1[2]`, `r CI.1[3]`]$. The $90\%$ confidence interval for $\mu_{.1} - \mu_{.3}$ is $[`r CI.2[2]`, `r CI.2[3]`]$.
+```{r I.c}
+alpha <- 0.01
+
+the.mult <- find.mult(alpha, a, b, dfSSE, 1, "AB")[3]
+
+# Note - j = 1 and j = 3 are flipped here due to how the problem is worded
+# Here, j = 1 represents New, j = 3 represents Exp
+# On the problem, j = 1 represents Exp, j = 3 represents New
+AB.cs <- matrix(0, nrow = a, ncol = b)
+AB.cs[1, 3] <- 1
+AB.cs[2, 3] <- -1
+CI.1 <- give.me.CI(data, MSE, equal.weights = TRUE, the.mult, "AB", AB.cs)
+CI.1 <- round(CI.1, 4)
+
+AB.cs <- matrix(0, nrow = a, ncol = b)
+AB.cs[1, 1] <- 1
+AB.cs[2, 1] <- -1
+CI.2 <- give.me.CI(data, MSE, equal.weights = TRUE, the.mult, "AB", AB.cs)
+CI.2 <- round(CI.2, 4)
+```
+c. The $99\%$ confidence interval for $\mu_{11} - \mu_{21}$ is $[`r CI.1[2]`, `r CI.1[3]`]$. The $99\%$ confidence interval for $\mu_{13} - \mu_{23}$ is $[`r CI.2[2]`, `r CI.2[3]`]$.
+d. Our results from C shows that the average days it takes for a Small systems, Exp experience programmer is around $`r abs(CI.1[3])`$ to $`r abs(CI.1[2])`$ less than Both systems, Exp experience programmer. The average days it takes for a Small systems, New experience programmer is around $`r abs(CI.2[3])`$ to $`r abs(CI.2[2])`$ less than Both systems, New experience programmer.
+e. ??
+f. ??
+
+# II
+a. $Y_{ij} = b_0 + b_1 X_{A, 2} + b_2 X_{B, 2} + b_3 X_{B, 3} + b_4 X_{A, 2} X_{B, 2} + b_5 X_{A, 2} X_{B, 3}$
+
+   There are $6$ parameters total.
+
+b. $b_0$ represents the estimated average for Small Systems, Low Experience
+c. $b_1$ represents the estimated average difference between Medium Systems, Low Experience and Small Systems, Low Experience ($\mu_{21} - \mu_{11}$).
+d. $b_4$ represents the interaction effect between Medium Systems and Medium Experience.
+e. $b_5$ represents the interaction effect between Medium Systems and Exp (High) Experience.
+
+# III.a
+Assuming that factor $A$ is Method and factor $B$ is Room.
+
+```{r III.a}
+data <- read.csv("Teaching.csv")
+names(data) = c("Y","A","B")
+interaction.plot(x.factor = data$A, trace.factor = data$B, response = data$Y, xlab = "Method", ylab = "Scores")
+```
+
+# III.b.1
+Here are the means for factor $A$ alone:
+```{r III.b}
+the.means <- find.means(data)
+```
+```{r III.b.1}
+knitr::kable(the.means[1])
+```
+
+# III.b.2
+Here are the means for factor $B$ alone:
+```{r III.b.2}
+knitr::kable(the.means[2])
+```
+
+# III.b.3
+Here are the means for both factors $A$ and $B$:
+```{r III.b.3}
+knitr::kable(the.means[2])
+```
+
+# III.c
+The full model is: ??
+
 # Appendix
 ```{r appendix, results="asis"}
 # Get all the labels
@@ -216,8 +332,8 @@ for (label in all_labels) {
 
   code <- knitr::knit_code$get(label)
 
-  cat("##", label, "\n")
   cat("```r \n")
+  cat("#", label, "\n")
   cat(code, sep = "\n")
   cat("```\n")
 }
