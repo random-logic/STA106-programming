@@ -316,8 +316,73 @@ Here are the means for both factors $A$ and $B$:
 knitr::kable(the.means[2])
 ```
 
-# III.c
-The full model is: ??
+# III.c.1
+Here are the counts for factor $A$ alone:
+```{r III.c}
+the.counts <- find.means(data, fun.name = length)
+```
+```{r III.c.1}
+knitr::kable(the.counts[1])
+```
+
+# III.c.2
+Here are the counts for factor $B$ alone:
+```{r III.c.2}
+knitr::kable(the.counts[2])
+```
+
+# III.c.3
+Here are the means for both factors $A$ and $B$:
+```{r III.c.3}
+knitr::kable(the.counts[3])
+```
+
+# III.d
+```{r III.d}
+the.data <- data
+AB = lm(Y ~ A*B,the.data)
+A.B = lm(Y ~ A + B,the.data)
+all.models = list(AB,A.B)
+SSE = t(as.matrix(sapply(all.models,function(M) sum(M$residuals^2))))
+colnames(SSE) = c("AB","(A+B)")
+rownames(SSE) = "SSE"
+
+# Conduct ANOVA test
+anova_result <- anova(A.B, AB)
+
+# Get the F-statistic and p-value
+f_statistic <- anova_result$F[2]  # Extracting F-statistic from the first row
+p_value <- anova_result$Pr[2]     # Extracting p-value from the first row
+```
+
+The full model is: $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon_{ijk}$
+
+The reduced model is: $Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon_{ijk}$
+
+$H_0:$ There is no interaction effect. Don't use the full model.
+
+$H_a:$ There is interaction effect. Use the full model.
+
+$\alpha = 0.01$
+
+$F_s = `r f_statistic`$
+
+$p = `r p_value`$
+
+Since $p > \alpha$, we accept $H_0$. Therefore, we do not use the full model.
+
+# III.e
+```{r III.e}
+the.params <- round(coef(A.B), 4)
+# knitr::kable(the.params)
+```
+
+$Y_{ij} = b_0 + b_1 X_{A,M2} + b_2 X_{A,M3} + b_3 X_{A,M4} + b_4 X_{B,O}$
+
+$Y_{ij} = `r the.params[1]` + `r the.params[2]` X_{A,M2} + `r the.params[3]` X_{A,M3} + `r the.params[4]` X_{A,M4} + `r the.params[5]` X_{B,O}$
+
+# III.f
+??
 
 # Appendix
 ```{r appendix, results="asis"}
