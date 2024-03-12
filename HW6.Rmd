@@ -253,35 +253,40 @@ alpha <- 0.01
 
 the.mult <- find.mult(alpha, a, b, dfSSE, 1, "AB")[3]
 
-# Note - j = 1 and j = 3 are flipped here due to how the problem is worded
-# Here, j = 1 represents New, j = 3 represents Exp
-# On the problem, j = 1 represents Exp, j = 3 represents New
+# Note - i indices are flipped. In R, i = 1 is Both
+# However, in the HW, i = 1 is Small
 AB.cs <- matrix(0, nrow = a, ncol = b)
-AB.cs[1, 1] <- 1
-AB.cs[2, 1] <- -1
+AB.cs[2, 1] <- 1
+AB.cs[1, 1] <- -1
 CI.1 <- give.me.CI(data, MSE, equal.weights = TRUE, the.mult, "AB", AB.cs)
 CI.1 <- round(CI.1, 4)
 
 AB.cs <- matrix(0, nrow = a, ncol = b)
-AB.cs[1, 3] <- 1
-AB.cs[2, 3] <- -1
+AB.cs[2, 3] <- 1
+AB.cs[1, 3] <- -1
 CI.2 <- give.me.CI(data, MSE, equal.weights = TRUE, the.mult, "AB", AB.cs)
 CI.2 <- round(CI.2, 4)
 ```
 c. The $99\%$ confidence interval for $\mu_{11} - \mu_{21}$ is $[`r CI.1[2]`, `r CI.1[3]`]$. The $99\%$ confidence interval for $\mu_{13} - \mu_{23}$ is $[`r CI.2[2]`, `r CI.2[3]`]$.
-d. Our results from C shows that the average days it takes for a Small systems, Exp experience programmer is around $`r abs(CI.1[3])`$ to $`r abs(CI.1[2])`$ less than Both systems, Exp experience programmer. The average days it takes for a Small systems, New experience programmer is around $`r abs(CI.2[3])`$ to $`r abs(CI.2[2])`$ less than Both systems, New experience programmer.
+d. Our results from C shows that the average days it takes for a Small systems, Exp experience programmer is around $`r abs(CI.1[2])`$ to $`r abs(CI.1[3])`$ more than Both systems, Exp experience programmer. The average days it takes for a Small systems, New experience programmer is around $`r abs(CI.2[2])`$ to $`r abs(CI.2[3])`$ more than Both systems, New experience programmer.
 e. The largest difference of days we would expect for the average programmer with different types of experience is around 97.1478.
 f. Yes, expereinced programmers do have significantly lower averages than other categories, because none of the confidence intervals in b contain 0.
 
 # II
-a. $Y_{ij} = b_0 + b_1 X_{A, 2} + b_2 X_{B, 2} + b_3 X_{B, 3} + b_4 X_{A, 2} X_{B, 2} + b_5 X_{A, 2} X_{B, 3}$
+```{r II}
+co <- coef(AB)
+```
+
+a. $Y_{ijk} = b_0 + b_1 X_{A, Small} + b_2 X_{B, Med} + b_3 X_{B, New} + b_4 X_{A, Small} X_{B, Med} + b_5 X_{A, Small} X_{B, New} + \epsilon_{ijk}$
+
+   $Y_{ijk} = `r co[1]` + `r co[2]` X_{A, 2} + `r co[3]` X_{B, 2} + `r co[4]` X_{B, 3} + `r co[5]` X_{A, 2} X_{B, 2} + `r co[6]` X_{A, 2} X_{B, 3} + \epsilon_{ijk}$
 
    There are $6$ parameters total.
 
-b. $b_0$ represents the estimated average for Small Systems, Low Experience
-c. $b_1$ represents the estimated average difference between Medium Systems, Low Experience and Small Systems, Low Experience ($\mu_{21} - \mu_{11}$).
-d. $b_4$ represents the interaction effect between Medium Systems and Medium Experience.
-e. $b_5$ represents the interaction effect between Medium Systems and Exp (High) Experience.
+b. $b_0$ represents the estimated average for Medium Systems, High (Exp) Experience
+c. $b_1$ represents the estimated average difference between Medium Systems, High Experience and Small Systems, High Experience ($\mu_{21} - \mu_{11}$).
+d. $b_4$ represents the interaction effect between Small Systems and Medium Experience.
+e. $b_5$ represents the interaction effect between Small Systems and New Experience.
 
 # III.a
 Assuming that factor $A$ is Method and factor $B$ is Room.
@@ -374,9 +379,9 @@ the.params <- round(coef(A.B), 4)
 # knitr::kable(the.params)
 ```
 
-$Y_{ij} = b_0 + b_1 X_{A,M2} + b_2 X_{A,M3} + b_3 X_{A,M4} + b_4 X_{B,O}$
+$Y_{ijk} = b_0 + b_1 X_{A,M2} + b_2 X_{A,M3} + b_3 X_{A,M4} + b_4 X_{B,O} + \epsilon_{ijk}$
 
-$Y_{ij} = `r the.params[1]` + `r the.params[2]` X_{A,M2} + `r the.params[3]` X_{A,M3} + `r the.params[4]` X_{A,M4} + `r the.params[5]` X_{B,O}$
+$Y_{ijk} = `r the.params[1]` + `r the.params[2]` X_{A,M2} + `r the.params[3]` X_{A,M3} + `r the.params[4]` X_{A,M4} + `r the.params[5]` X_{B,O} + \epsilon_{ijk}$
 
 # III.f
 We would choose the Tukey multiplier because that multiplier assumes that we are making all possible pairwise confidence intervals. We can have the multiplier only account for factor B.
