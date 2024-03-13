@@ -1,0 +1,87 @@
+---
+title: "Your Title"
+author: "Your Name"
+---
+
+<!-- Uncomment this part if you want to hide code in output -->
+<!-- ```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+``` -->
+
+# Basics
+Make sure to categorize chunks of code under headers for more organization. 
+
+```{r Chunk1}
+# This is a chunk of code, name is Chunk1
+# You may not have duplicate chunk names
+# You may name your chunks anything other than setup or appendix
+x <- 1
+x # You can output variables like this
+```
+
+```{r Chunk2}
+y <- 2
+```
+
+You can also output variables ($y = `r y`$) inline.
+
+```{r Chunk3}
+z <- 3.1415
+round(z, 2) # You can also round large numbers
+```
+
+# Formatting Nice Dataframes
+```{r DataFrames}
+the.data <- data.frame(y = c(1, 2, 3, 4), x = c(1, 2, 3, 4))
+the.data # We lose points if we format like this in final report
+```
+
+```{r DataFramesNicelyFormatted}
+knitr::kable(the.data) # You need to format like this
+```
+
+# Converting Matrices to Nice Tables
+```{r FormatMatrixNicely}
+the.matrix <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 3, ncol = 2)
+knitr::kable(data.frame(the.matrix))
+```
+
+# Extract information from models
+```{r ExtractInfoFromModel}
+x <- c(1, 2, 3, 4, 5, 6, 7, 8)
+y <- runif(8) * 10 # This vector is random every time
+the.model <- lm(y ~ x) # This can be any model
+the.summary <- summary(the.model)
+the.summary
+```
+
+- Extracted p-value of intercept: $p = `r the.summary$coefficients["(Intercept)", "Pr(>|t|)"]`$
+- You can use chatGPT to figure out how to extract values from `the.summary`
+
+# Need Help Writing R Code?
+- Consult the R examples that professor put on piazza
+- If you cannot find the answer in provided R examples:
+   - Ask ChatGPT, but make sure you understand what's happening in the output
+   - Conduct a Google search
+
+# Appendix
+After converting to word document, you will need to copy all the code here to word document when done.
+
+```{r appendix, results="asis", echo = FALSE}
+# Get all the labels
+all_labels <- knitr::all_labels()
+
+# Print out code along with labels
+for (label in all_labels) {
+  if (label == "setup" || label == "appendix") {
+    next
+  }
+
+  code <- knitr::knit_code$get(label)
+
+  cat("```r \n")
+  cat("# ", label, "\n")
+  cat(code, sep = "\n")
+  cat("\n```\n")
+}
+```
