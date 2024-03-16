@@ -1,0 +1,116 @@
+---
+title: "STA 106 Final"
+author: "Vanessa Vuong"
+date: "2024-03-14"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Setup
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(readr)
+library(car)
+
+insurance <- read.csv(file = 'insurance.csv')
+View(insurance)
+head(insurance)
+
+```
+
+# Model Summary
+```{r}
+model.fit <- aov(charges ~ region + children, data = insurance)
+summary(model.fit)
+```
+
+# QQ Plot
+```{r}
+qqnorm(model.fit$residuals)
+qqline(model.fit$residuals)
+
+```
+
+# Shapiro-Wilks Test
+```{r}
+ei=model.fit$residuals
+the.SWtest = shapiro.test(ei)
+the.SWtest
+
+p.val=shapiro.test(model.fit$residuals)$p.val
+p.val
+```
+
+# Errors vs Group Means Plot
+```{r}
+plot(model.fit$fitted.values,
+     model.fit$residuals,
+     main = "Errors vs. Group Means",
+     xlab = "Group Means",
+     ylab = "Errors")
+abline(h = 0, col = "purple")
+
+```
+
+# Brown-Forsythe Test
+
+```{r}
+the.BFtest = leveneTest(ei ~ paste(region, children), data = insurance, center = median)
+the.BFtest
+p.val1 = the.BFtest[[3]][1]
+p.val1
+```
+
+# Transformation via semi-studentized residuals
+```{r}
+rij = rstandard(model.fit)
+a = length(unique(insurance$charges))
+nt = nrow(insurance)
+alpha = 0.05
+t.cutoff= qt(1-alpha/(2*nt), nt-a)
+CO.rij = which(abs(rij) > t.cutoff)
+outliers = CO.rij
+new.data = insurance[-outliers,]
+new.model = lm(charges ~ region + children, new.data)
+```
+
+# Summary Statistics
+
+```{r}
+aggregate(charges~region, data= insurance, mean)
+aggregate(charges~children, data= insurance, mean)
+
+aggregate(charges~region, data= insurance, sd)
+aggregate(charges~children, data= insurance, sd)
+```
+
+# Subset Data
+```{r}
+insurance1 <- subset(insurance, select=-c(age, sex, bmi, smoker))
+
+library(dplyr)
+print("Before: ") 
+data 
+  
+print("After: ") 
+  
+```
+```{r}
+insurance.subset <- select(insurance1,charges,children,region)
+insurance.subset
+```
+
+# Boxplot and Interaction plot
+```{r}
+table(insurance$children)
+
+library(ggplot2)
+insurance$ChildrenRegion <- interaction(insurance$children, insurance$region) 
+ggplot(aes(y = charges, x = ChildrenRegion), data = insurance) + geom_boxplot(aes(fill=ChildrenRegion))
+
+#Interaction Plot
+interaction.plot(insurance$children, insurance$region, insurance$charges)
+```
