@@ -15,7 +15,8 @@ sw_test <- function(data) {
 
 bf_test <- function(data) {
   model <- aov(Y ~ A * B, data = data)
-  return(car::leveneTest(model$residuals ~ paste(data$A, data$B))[1, 3])
+  return(car::leveneTest(model$residuals ~ paste(A, B),
+                         data = data, center = median)[1, 3])
 }
 
 # Assuming data is TFA and has Y, A, B
@@ -98,17 +99,17 @@ res$data <- apply(res, 1, function(row) {
                        row["TransformationMethod"], data))
 })
 
-res$SW_Test <- apply(res, 1, function(row) {
+res$SW_Test_P_Value <- apply(res, 1, function(row) {
   return(sw_test(row["data"][[1]]))
 })
 
-res$BF_Test <- apply(res, 1, function(row) {
+res$Levene_Test_P_Value <- apply(res, 1, function(row) {
   return(bf_test(row["data"][[1]]))
 })
 
 res <- res[, -which(names(res) == "data")]
 
-knitr::kable(res)
+knitr::kable(res, digits = 16)
 ```
 
 ```{r appendix, results="asis", echo = FALSE}

@@ -1,0 +1,93 @@
+---
+title: "STA 106 Summary"
+author: "Sanah Keswani-Santiago and Andrew"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Import Data
+
+```{r}
+library(readr)
+insurance <- read.csv("insurance.csv")
+
+insurance$children <- as.factor(insurance$children)
+region <- insurance$region
+houseSize <- insurance$children
+cost <- insurance$charges
+```
+
+
+## Data Summary
+
+```{r}
+# Average Cost by Region and House Size
+aggregate(cost~region+houseSize, data = insurance, FUN = mean)
+
+# Standard Deviation of Cost by Region and House Size
+aggregate(cost~region+houseSize, data = insurance, FUN = sd)
+
+# Sample Size by Region and House Size
+aggregate(cost~region+houseSize, data = insurance, FUN = length)
+
+# Table for Means, Standard Deviation and Sample Size by Group (Region)
+groupMeansInsReg <- by(cost, region, mean)
+groupSDsInsReg <- by(cost, region, sd)
+groupNisInsReg <- by(cost, region, length)
+insRegSummary <- rbind(groupMeansInsReg, groupSDsInsReg, groupNisInsReg)
+insRegSummary <- round(insRegSummary, digits = 4)
+colnames(insRegSummary) = names(groupMeansInsReg)
+rownames(insRegSummary) = c("Means", "Std. Dev", "Sample Size")
+insRegSummary
+
+# Table for Means, Standard Deviation and Sample Size by Group (House Size)
+groupMeansInsHou <- by(cost, houseSize, mean)
+groupSDsInsHou <- by(cost, houseSize, sd)
+groupNisInsHou <- by(cost, houseSize, length)
+insHouSummary <- rbind(groupMeansInsHou, groupSDsInsHou, groupNisInsHou)
+insHouSummary <- round(insHouSummary, digits = 4)
+colnames(insHouSummary) = names(groupMeansInsHou)
+rownames(insHouSummary) = c("Means", "Std. Dev", "Sample Size")
+insHouSummary
+
+# Histograms of Cost by Region 
+library(ggplot2)
+ggplot(insurance, aes(x=cost, color=region,fill=region)) + geom_histogram(position="identity", alpha=0.5) + facet_grid(region ~ .)
+
+# Histograms of Beck Score by House Size 
+library(ggplot2)
+ggplot(insurance, aes(x=cost, color=children,fill=children)) + geom_histogram(position="identity", alpha=0.5) + facet_grid(children ~ .)
+
+# Overall Histogram of Cost
+hist(cost, xlab = "Cost", ylab = "Frequency", main = "Histogram of Cost")
+
+# Overall Boxplot of Cost
+boxplot(cost, main = "Cost")
+
+# Boxplots of Cost by Region and House Size
+boxplot(cost~region+houseSize, data = insurance, xlab = "Region and House Size", ylab = "Cost", main = "Cost by Region and House Size")
+
+# Boxplots of Beck Score by Region
+boxplot(cost~region, data = insurance, xlab = "Region", ylab = "Cost", main = "Cost by Region")
+
+# Boxplots of Beck Score by House Size
+boxplot(cost~houseSize, data = insurance, xlab = "House Size", ylab = "Cost", main = "Cost by House Size")
+```
+
+## Standard Deviations by group
+```{r}
+# Standard Deviation of Cost by Region
+aggregate(cost~houseSize, data = insurance, FUN = sd)
+
+# Sd by House Size
+aggregate(cost~region, data = insurance, FUN = sd)
+
+# Overall sd
+aggregate(cost~1, data = insurance, FUN = sd)
+```
