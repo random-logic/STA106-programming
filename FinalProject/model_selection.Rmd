@@ -1,0 +1,17 @@
+$\alpha = 0.05$
+
+Model with interaction:
+
+$Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + (\gamma\delta)_{ij} + \epsilon{ijk}$
+
+Model with factor A and factor B:
+
+$Y_{ijk} = \mu_{..} + \gamma_i + \delta_j + \epsilon{ijk}$
+
+Model with factor A only:
+
+$Y_{ijk} = \mu_{..} + \gamma_i + \epsilon{ijk}$
+
+Model with factor B only (final model):
+
+$Y_{ijk} = \mu_{..} + \delta_j + \epsilon{ijk}$
