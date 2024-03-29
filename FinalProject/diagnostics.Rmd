@@ -9,12 +9,12 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
 
 ```{r Functions}
 sw_test <- function(data) {
-  model <- aov(Y ~ A * B, data = data)
+  model <- aov(Y ~ A + B, data = data)
   return(shapiro.test(model$residuals)$p.value)
 }
 
 bf_test <- function(data) {
-  model <- aov(Y ~ A * B, data = data)
+  model <- aov(Y ~ A + B, data = data)
   return(car::leveneTest(model$residuals ~ paste(A, B),
                          data = data, center = median)[1, 3])
 }
@@ -24,7 +24,7 @@ do_transform <- function(objective, data) {
   if (objective == "None") {
     return(data)
   } else if (objective == "PPCC" || objective == "Shapiro-Wilk") {
-    model <- aov(Y ~ A * B, data = data)
+    model <- aov(Y ~ A + B, data = data)
     L <- EnvStats::boxcox(model, objective.name = objective,
                           optimize = TRUE)$lambda
   } else if (objective == "Log-Likelihood") {
@@ -43,7 +43,7 @@ do_transform <- function(objective, data) {
 # Assuming data is TFA and has Y, A, B
 do_transform_and_model <- function(objective, data) {
   t.data <- do_transform(objective, data)
-  t.model <- aov(Y ~ A * B, data = t.data)
+  t.model <- aov(Y ~ A + B, data = t.data)
   return(t.model)
 }
 
@@ -54,11 +54,11 @@ remove_outlier <- function(objective, data, alpha = 0.05) {
   if (objective == "None") {
     return(data)
   }else if (objective == "Boxplot") {
-    plot <- boxplot(Y ~ A * B, data = data, plot = FALSE)
+    plot <- boxplot(Y ~ A + B, data = data, plot = FALSE)
     outliers <- plot$out
     return(data[!data$Y %in% outliers, ])
   } else if (objective == "Studentized") {
-    model <- lm(Y ~ A * B, data = data)
+    model <- lm(Y ~ A + B, data = data)
     rij <- rstandard(model)
     nt <- nrow(data)
     a <- length(unique(data$A))
